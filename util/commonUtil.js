@@ -30,7 +30,36 @@ function sanitizeEnum(param) {
 	else return list[0];
 }
 
+/**
+ * Returns first line and rest from string
+ * @param str
+ */
+function getLineSeperatorPosition(str, lineSeperator) {
+	const sep = (typeof lineSeperator === 'string') ? lineSeperator : '\n';
+	const isAuto = lineSeperator === undefined;
+	let index = str.indexOf(sep);
+	let size = 0;
+
+	// If line seperator found
+	if (index !== -1) {
+		// If crlf auto checking enabled
+		if (isAuto && str.charAt(index-1) === '\r') {
+			index -= 1;
+			size = 2;
+		} else {
+			size = 1;
+		}
+	}
+
+	return {
+		index,
+		size,
+	};
+}
+
 module.exports = {
 	sanitizeNumber,
 	sanitizeEnum,
+	getLineSeperatorPosition,
+
 };
