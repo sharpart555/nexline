@@ -58,8 +58,30 @@ function getLineSeperatorPosition(str, lineSeperator) {
 	};
 }
 
+/**
+ * Parse string with linePosition
+ * @param str
+ * @param linePosition
+ */
+function parseWithLinePosition(str, linePosition) {
+	const { index, size } = linePosition;
+
+	if (index === -1) {
+		return {
+			line: str,
+			rest: '',
+		};
+	} else {
+		return {
+			line: str.slice(0, index),
+			rest: str.slice(index+size),
+		};
+	}
+}
+
 module.exports = {
 	sanitizeNumber,
 	sanitizeEnum,
 	getLineSeperatorPosition,
+	parseWithLinePosition,
 };
