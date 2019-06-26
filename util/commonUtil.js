@@ -33,6 +33,7 @@ function sanitizeEnum(param) {
 /**
  * Returns first line and rest from string
  * @param str
+ * @param lineSeperator
  */
 function getLineSeperatorPosition(str, lineSeperator) {
 	const sep = (typeof lineSeperator === 'string') ? lineSeperator : '\n';
