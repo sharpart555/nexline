@@ -16,5 +16,14 @@
   ],
   "author": "Y.H.Jin",
   "license": "ISC",
-  "engines": { "node":  ">= 6.0.0" }
+  "engines": {
+    "node": ">= 6.0.0"
+  },
+  "devDependencies": {
+    "eslint": "^6.0.1",
+    "eslint-config-prettier": "^6.0.0",
+    "eslint-plugin-prettier": "^3.1.0",
+    "prettier": "^1.18.2",
+    "prettier-eslint": "^9.0.0"
+  }
 }
