@@ -61,5 +61,4 @@ module.exports = {
 	sanitizeNumber,
 	sanitizeEnum,
 	getLineSeperatorPosition,
-
 };
