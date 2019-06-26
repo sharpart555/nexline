@@ -61,10 +61,10 @@ function getLineSeperatorPosition(str, lineSeperator) {
 /**
  * Parse string with linePosition
  * @param str
- * @param linePosition
+ * @param lineSeperatorPosition
  */
-function parseWithLinePosition(str, linePosition) {
-	const { index, size } = linePosition;
+function parseWithLineSeperatorPosition(str, lineSeperatorPosition) {
+	const { index, size } = lineSeperatorPosition;
 
 	if (index === -1) {
 		return {
@@ -83,5 +83,5 @@ module.exports = {
 	sanitizeNumber,
 	sanitizeEnum,
 	getLineSeperatorPosition,
-	parseWithLinePosition,
+	parseWithLineSeperatorPosition,
 };
