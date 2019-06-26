@@ -31,6 +31,40 @@ function sanitizeEnum(param) {
 }
 
 /**
+ * Get one line from string
+ * @param str
+ * @param lineSeperator
+ */
+function getLineAndRest(str, lineSeperator) {
+	const sep = (typeof lineSeperator === 'string') ? lineSeperator : '\n';
+	const isAuto = lineSeperator === undefined;
+	let index = str.indexOf(sep);
+	let size = 0;
+
+	if (index === -1) {
+		// If line seperator not found
+		return {
+			line: str,
+			rest: '',
+		};
+	} else {
+		// If line seperator found
+		// Check crlf auto checking enabled
+		if (isAuto && str.charAt(index-1) === '\r') {
+			index -= 1;
+			size = 2;
+		} else {
+			size = 1;
+		}
+
+		return {
+			line: str.slice(0, index),
+			rest: str.slice(index+size),
+		};
+	}
+}
+
+/**
  * Returns first line and rest from string
  * @param str
  * @param lineSeperator
@@ -82,6 +116,7 @@ function parseWithLineSeperatorPosition(str, lineSeperatorPosition) {
 module.exports = {
 	sanitizeNumber,
 	sanitizeEnum,
+	getLineAndRest,
 	getLineSeperatorPosition,
 	parseWithLineSeperatorPosition,
 };
