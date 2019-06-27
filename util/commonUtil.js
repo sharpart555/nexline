@@ -45,7 +45,7 @@ function getLineAndRest(str, lineSeperator) {
 		// If line seperator not found
 		return {
 			line: str,
-			rest: '',
+			rest: null,
 		};
 	} else {
 		// If line seperator found
