@@ -38,6 +38,20 @@ function nextline(param) {
 	let isBusy = false;
 	let isFinished = false;
 	let bufferString = null;
+
+	/**
+	 * Get next line
+	 */
+	async function next() {
+		return new Promise((resolve, reject) => {
+			nextQueue.push({ resolve, reject });
+			// if (!isBusy) processNextQueue();
+		});
+	}
+
+	return {
+		next,
+	};
 }
 
 /**
