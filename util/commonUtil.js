@@ -83,6 +83,16 @@ function getLineAndRest(text, lineSeparatorList) {
 }
 
 /**
+ * Check text has line separator
+ * @param text
+ * @param lineSeparatorList
+ */
+function hasLineSeparator(text, lineSeparatorList) {
+	const lineInfo = getLineSeparatorPosition(text, lineSeparatorList);
+	return lineInfo.index !== -1;
+}
+
+/**
  * Concatenate string with special null treatment
  * @param a
  * @param b
@@ -99,5 +109,6 @@ module.exports = {
 	sanitizeEnum,
 	getLineSeparatorPosition,
 	getLineAndRest,
+	hasLineSeparator,
 	concat,
 };
