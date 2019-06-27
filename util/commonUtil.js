@@ -66,6 +66,8 @@ function getLineAndRest(str, lineSeperator) {
 
 /**
  * Concatenate string with special null treatment
+ * @param a
+ * @param b
  */
 function concat(a, b) {
 	if (a === null && b === null) return null;
