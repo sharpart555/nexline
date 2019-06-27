@@ -36,7 +36,7 @@ function sanitizeEnum(param) {
  * @param lineSeperator
  */
 function getLineAndRest(str, lineSeperator) {
-	const sep = (typeof lineSeperator === 'string') ? lineSeperator : '\n';
+	const sep = typeof lineSeperator === 'string' ? lineSeperator : '\n';
 	const isAuto = lineSeperator === undefined;
 	let index = str.indexOf(sep);
 	let size = 0;
@@ -50,7 +50,7 @@ function getLineAndRest(str, lineSeperator) {
 	} else {
 		// If line seperator found
 		// Check crlf auto checking enabled
-		if (isAuto && str.charAt(index-1) === '\r') {
+		if (isAuto && str.charAt(index - 1) === '\r') {
 			index -= 1;
 			size = 2;
 		} else {
@@ -59,7 +59,7 @@ function getLineAndRest(str, lineSeperator) {
 
 		return {
 			line: str.slice(0, index),
-			rest: str.slice(index+size),
+			rest: str.slice(index + size),
 		};
 	}
 }
@@ -76,9 +76,39 @@ function concat(a, b) {
 	return a + b;
 }
 
+/**
+ * Get lineSeperator index
+ * @param text
+ * @param lineSeperatorList
+ */
+function indexOfLineSeperator(text, lineSeperatorList) {
+	const result = {
+		index: -1,
+		length: 0,
+	};
+
+	// Iterate over lineSeperatorList
+	for (const item of lineSeperatorList) {
+		const index = text.indexOf(item);
+		if (index === -1) continue;
+
+		if (
+			result.index === -1 || //
+			index < result.index ||
+			(index === result.index && item.length > result.length)
+		) {
+			result.index = index;
+			result.length = item.length;
+		}
+	}
+
+	return result;
+}
+
 module.exports = {
 	sanitizeNumber,
 	sanitizeEnum,
 	getLineAndRest,
 	concat,
+	indexOfLineSeperator,
 };
