@@ -5,6 +5,15 @@ const stream = require('stream');
 const commonUtil = require('./util/commonUtil');
 
 /**
+ * Variables
+ */
+const STREAM_STATUS = {
+	BEFORE_READY: 0,
+	READY: 1,
+	END: 2,
+};
+
+/**
  * Create nextline
  * @param param
  * @param param.input string or Readable stream
@@ -35,9 +44,11 @@ function nextline(param) {
 	 * Variables
 	 */
 	const nextQueue = [];
+	const isStream = input instanceof stream.Readable;
+	let streamStatus = STREAM_STATUS.BEFORE_READY;
 	let isBusy = false;
 	let isFinished = false;
-	let bufferString = null;
+	let bufferString = '';
 
 	/**
 	 * Get next line
@@ -65,11 +76,26 @@ function nextline(param) {
 			return;
 		}
 
+		// Prepare stream
+		if (isStream && streamStatus === STREAM_STATUS.BEFORE_READY) {
+			await prepareStream();
+			streamStatus = STREAM_STATUS.READY;
+		}
+
 		item.resolve('');
 
 		// If nextQueue is not empty. continue processing
 		if (nextQueue.length) process.nextTick(processNextQueue);
 		else isBusy = false;
+	}
+
+	/**
+	 * Prepare stream ready to read
+	 */
+	async function prepareStream() {
+		return new Promise((resolve) => {
+			input.on('readable', resolve);
+		});
 	}
 
 	return {
