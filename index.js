@@ -7,7 +7,7 @@ const commonUtil = require('./util/commonUtil');
 /**
  * Variables
  */
-const STREAM_STATUS = {
+const INPUT_STATUS = {
 	BEFORE_READY: 0,
 	READY: 1,
 	END: 2,
@@ -17,14 +17,14 @@ const STREAM_STATUS = {
  * Create nextline
  * @param param
  * @param param.input string or Readable stream
- * @param [param.lineSeperator] if not specified, auto detect crlf and lf
+ * @param [param.lineSeparator] if not specified, auto detect crlf and lf
  */
 function nextline(param) {
 	/**
 	 * Verify & sanitize parameter
 	 */
 	const param2 = {
-		lineSeperator: ['\n', '\r\n'],
+		lineSeparator: ['\n', '\r\n'],
 		...param,
 	};
 
@@ -33,11 +33,11 @@ function nextline(param) {
 	if (!input) throw new Error('Empty input');
 	if (typeof input !== 'string' && !(input instanceof stream.Readable)) throw new Error('Invalid input. Input must be string or readable stream');
 
-	// Verify lineSeperator
-	const lineSeperatorList = Array.isArray(param2.lineSeperator) ? [...param2.lineSeperator] : [param2.lineSeperator];
-	if (lineSeperatorList.length === 0) throw new Error('Invalid lineSeperator');
-	for (const item of lineSeperatorList) {
-		if (typeof item !== 'string' || item.length === 0) throw new Error('Invalid lineSeperator, lineSeperator must be string and must exceed one character');
+	// Verify lineSeparator
+	const lineSeparatorList = Array.isArray(param2.lineSeparator) ? [...param2.lineSeparator] : [param2.lineSeparator];
+	if (lineSeparatorList.length === 0) throw new Error('Invalid lineSeparator');
+	for (const item of lineSeparatorList) {
+		if (typeof item !== 'string' || item.length === 0) throw new Error('Invalid lineSeparator, lineSeparator must be string and must exceed one character');
 	}
 
 	/**
@@ -45,7 +45,7 @@ function nextline(param) {
 	 */
 	const nextQueue = [];
 	const isStream = input instanceof stream.Readable;
-	let streamStatus = STREAM_STATUS.BEFORE_READY;
+	let inputStatus = isStream ? INPUT_STATUS.BEFORE_READY : INPUT_STATUS.READY;
 	let isBusy = false;
 	let isFinished = false;
 	let bufferString = '';
@@ -77,10 +77,27 @@ function nextline(param) {
 		}
 
 		// Prepare stream
-		if (isStream && streamStatus === STREAM_STATUS.BEFORE_READY) {
+		if (isStream && inputStatus === INPUT_STATUS.BEFORE_READY) {
 			await prepareStream();
-			streamStatus = STREAM_STATUS.READY;
+			inputStatus = INPUT_STATUS.READY;
 		}
+
+		// If bufferString contains lineSeparator
+		if (bufferString !== null) {
+			const lineInfo = commonUtil.getLineAndRest(bufferString, lineSeparatorList);
+			if (lineInfo.rest !== null) {
+				item.resolve(lineInfo.line);
+				bufferString = lineInfo.rest;
+
+				// If nextQueue is not empty. continue processing
+				if (nextQueue.length) process.nextTick(processQueue);
+				else isBusy = false;
+				return;
+			}
+		}
+
+		// Read some data from stream
+
 
 		item.resolve('');
 
@@ -94,7 +111,10 @@ function nextline(param) {
 	 */
 	async function prepareStream() {
 		return new Promise((resolve) => {
-			input.on('readable', resolve);
+			input.on('readable', () => {
+				inputStatus = INPUT_STATUS.READY;
+				resolve();
+			});
 		});
 	}
 
