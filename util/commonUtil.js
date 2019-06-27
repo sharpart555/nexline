@@ -31,18 +31,18 @@ function sanitizeEnum(param) {
 }
 
 /**
- * Get lineSeperator index
+ * Get lineSeparator index
  * @param text
- * @param lineSeperatorList
+ * @param lineSeparatorList
  */
-function getLineSeperatorPosition(text, lineSeperatorList) {
+function getLineSeparatorPosition(text, lineSeparatorList) {
 	const result = {
 		index: -1,
 		length: 0,
 	};
 
-	// Iterate over lineSeperatorList
-	for (const item of lineSeperatorList) {
+	// Iterate over lineSeparatorList
+	for (const item of lineSeparatorList) {
 		const index = text.indexOf(item);
 		if (index === -1) continue;
 
@@ -62,19 +62,19 @@ function getLineSeperatorPosition(text, lineSeperatorList) {
 /**
  * Get one line from string
  * @param text
- * @param lineSeperatorList
+ * @param lineSeparatorList
  */
-function getLineAndRest(text, lineSeperatorList) {
-	const position = getLineSeperatorPosition(text, lineSeperatorList);
+function getLineAndRest(text, lineSeparatorList) {
+	const position = getLineSeparatorPosition(text, lineSeparatorList);
 
 	if (position.index === -1) {
-		// If line seperator not found
+		// If line separator not found
 		return {
 			line: text,
 			rest: null,
 		};
 	} else {
-		// If line seperator found
+		// If line separator found
 		return {
 			line: text.slice(0, position.index),
 			rest: text.slice(position.index + position.length),
@@ -97,7 +97,7 @@ function concat(a, b) {
 module.exports = {
 	sanitizeNumber,
 	sanitizeEnum,
-	getLineSeperatorPosition,
+	getLineSeparatorPosition,
 	getLineAndRest,
 	concat,
 };
