@@ -96,10 +96,19 @@ function nextline(param) {
 			}
 		}
 
-		// Read some data from stream
+		// Read more string from stream
+		const moreString = readStream();
 
+		// Concat to bufferString
+		bufferString = commonUtil.concat(bufferString, moreString);
 
-		item.resolve('');
+		// Get lineInfo
+		const lineInfo = commonUtil.getLineAndRest(bufferString, lineSeparatorList);
+		item.resolve(lineInfo.line);
+		bufferString = lineInfo.rest;
+
+		// Check finished
+		if (bufferString === null && inputStatus === INPUT_STATUS.END) isFinished = true;
 
 		// If nextQueue is not empty. continue processing
 		if (nextQueue.length) process.nextTick(processNextQueue);
@@ -118,6 +127,36 @@ function nextline(param) {
 		});
 	}
 
+	/**
+	 * Read stream
+	 */
+	function readStream() {
+		if (inputStatus === INPUT_STATUS.END) return null;
+
+		if (typeof input === 'string') {
+			// If input is string, return string at first, return null at second
+			inputStatus = INPUT_STATUS.END;
+			return input;
+		} else {
+			// If input is stream
+			let result = null;
+			while(true) {
+				const chunkBuffer = input.read();
+				if (chunkBuffer === null) {
+					inputStatus = INPUT_STATUS.END;
+					return result;
+				} else {
+					const chunkText = chunkBuffer.toString();
+					result = commonUtil.concat(result, chunkText);
+					if (commonUtil.hasLineSeparator(chunkText, lineSeparatorList)) return result;
+				}
+			}
+		}
+	}
+
+	/**
+	 * Expose method
+	 */
 	return {
 		next,
 	};
