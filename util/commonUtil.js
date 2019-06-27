@@ -113,10 +113,21 @@ function parseWithLineSeperatorPosition(str, lineSeperatorPosition) {
 	}
 }
 
+/**
+ * Concatenate string with special null treatment
+ */
+function concat(a, b) {
+	if (a === null && b === null) return null;
+	if (a === null) a = '';
+	if (b === null) b = '';
+	return a + b;
+}
+
 module.exports = {
 	sanitizeNumber,
 	sanitizeEnum,
 	getLineAndRest,
 	getLineSeperatorPosition,
 	parseWithLineSeperatorPosition,
+	concat,
 };
