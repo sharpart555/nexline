@@ -5,29 +5,17 @@ const stream = require('stream');
 const commonUtil = require('./util/commonUtil');
 
 /**
- * Variables
- */
-const LINE_SEPERATOR = {
-	CRLF: '\r\n',
-	LF: '\n',
-	CR: '\r',
-};
-const LINE_SEPERATOR_LIST = Object.keys(LINE_SEPERATOR);
-
-/**
  * Create nextline
  * @param param
  * @param param.input text or buffer (it also can be array)
- * @param param.readSize
- * @param param.lineSeperator
+ * @param [param.lineSeperator] if not specified, auto detect crlf and lf
  */
 function nextline(param) {
 	/**
 	 * Verify & sanitize parameter
 	 */
 	const param2 = {
-		readSize: 1024 * 1024, // 1MB
-		lineSeperator: 'CRLF',
+		lineSeperator: undefined,
 		...param,
 	};
 
