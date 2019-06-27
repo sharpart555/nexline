@@ -31,57 +31,11 @@ function sanitizeEnum(param) {
 }
 
 /**
- * Get one line from string
- * @param str
- * @param lineSeperator
- */
-function getLineAndRest(str, lineSeperator) {
-	const sep = typeof lineSeperator === 'string' ? lineSeperator : '\n';
-	const isAuto = lineSeperator === undefined;
-	let index = str.indexOf(sep);
-	let size = 0;
-
-	if (index === -1) {
-		// If line seperator not found
-		return {
-			line: str,
-			rest: null,
-		};
-	} else {
-		// If line seperator found
-		// Check crlf auto checking enabled
-		if (isAuto && str.charAt(index - 1) === '\r') {
-			index -= 1;
-			size = 2;
-		} else {
-			size = 1;
-		}
-
-		return {
-			line: str.slice(0, index),
-			rest: str.slice(index + size),
-		};
-	}
-}
-
-/**
- * Concatenate string with special null treatment
- * @param a
- * @param b
- */
-function concat(a, b) {
-	if (a === null && b === null) return null;
-	if (a === null) a = '';
-	if (b === null) b = '';
-	return a + b;
-}
-
-/**
  * Get lineSeperator index
  * @param text
  * @param lineSeperatorList
  */
-function indexOfLineSeperator(text, lineSeperatorList) {
+function getLineSeperatorPosition(text, lineSeperatorList) {
 	const result = {
 		index: -1,
 		length: 0,
@@ -105,10 +59,45 @@ function indexOfLineSeperator(text, lineSeperatorList) {
 	return result;
 }
 
+/**
+ * Get one line from string
+ * @param text
+ * @param lineSeperatorList
+ */
+function getLineAndRest(text, lineSeperatorList) {
+	const position = getLineSeperatorPosition(text, lineSeperatorList);
+
+	if (position.index === -1) {
+		// If line seperator not found
+		return {
+			line: text,
+			rest: null,
+		};
+	} else {
+		// If line seperator found
+		return {
+			line: text.slice(0, position.index),
+			rest: text.slice(position.index + position.length),
+		};
+	}
+}
+
+/**
+ * Concatenate string with special null treatment
+ * @param a
+ * @param b
+ */
+function concat(a, b) {
+	if (a === null && b === null) return null;
+	if (a === null) a = '';
+	if (b === null) b = '';
+	return a + b;
+}
+
 module.exports = {
 	sanitizeNumber,
 	sanitizeEnum,
+	getLineSeperatorPosition,
 	getLineAndRest,
 	concat,
-	indexOfLineSeperator,
 };
