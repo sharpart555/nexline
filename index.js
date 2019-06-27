@@ -45,8 +45,31 @@ function nextline(param) {
 	async function next() {
 		return new Promise((resolve, reject) => {
 			nextQueue.push({ resolve, reject });
-			// if (!isBusy) processNextQueue();
+			if (!isBusy) processNextQueue();
 		});
+	}
+
+	/**
+	 * Process nextQueue
+	 */
+	async function processNextQueue() {
+		// Set isBusy flag
+		isBusy = true;
+
+		// Get nextQueue item
+		const item = nextQueue.shift();
+
+		// If finished, always return null
+		if (isFinished) {
+			item.resolve(null);
+			return;
+		}
+
+		item.resolve('');
+
+		// If nextQueue is not empty. continue processing
+		if (nextQueue.length) process.nextTick(processNextQueue);
+		else isBusy = false;
 	}
 
 	return {
