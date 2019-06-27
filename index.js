@@ -30,6 +30,14 @@ function nextline(param) {
 	for (const item of lineSeperatorList) {
 		if (typeof item !== 'string' || item.length === 0) throw new Error('Invalid lineSeperator, lineSeperator must be string and must exceed one character');
 	}
+
+	/**
+	 * Variables
+	 */
+	const nextQueue = [];
+	let isBusy = false;
+	let isFinished = false;
+	let bufferString = null;
 }
 
 /**
