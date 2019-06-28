@@ -23,7 +23,7 @@ const INPUT_STATUS = {
  */
 function nextline(param) {
 	/**
-	 * Verify & sanitize parameter
+	 * Verify parameter
 	 */
 	const param2 = {
 		lineSeparator: ['\n', '\r\n'],
