@@ -2,9 +2,15 @@
   "name": "nextline",
   "version": "0.1.0",
   "description": "Reading stream or string line by line",
-  "main": "index.js",
-  "scripts": {
-    "test": "echo \"Error: no test specified\" && exit 1"
+  "author": "Youngho Jin",
+  "license": "MIT",
+  "homepage": "https://github.com/sharpart555/nextline",
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/sharpart555/nextline"
+  },
+  "bugs": {
+    "url": "https://github.com/sharpart555/nextline/issues"
   },
   "keywords": [
     "nextline",
@@ -14,8 +20,10 @@
     "line",
     "readline"
   ],
-  "author": "Youngho Jin",
-  "license": "MIT",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
   "engines": {
     "node": ">= 8.0.0"
   },
