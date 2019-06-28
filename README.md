@@ -2,6 +2,7 @@
 Reading stream or string line by line 
 * Lightweight
 * Small memory foot print
+* Great for execute async job over line by line
 
 ## Why I made this?
 Node.js's default readline module is great but it's `pause()` method does not work immediately.
@@ -20,16 +21,16 @@ Required Node.js version >= 8.0.0.
 npm install nexline
 ```
  
-## Usage
+## How to use
+### Basic Usage
 ```js
 const nexline = require('nexline');
+const fs = require('fs');
 
 async function main () {
-	const inputStream = fs.createReadStream(path_to_file);
+	// Basic Usage
 	const nl = nexline({
-		input: inputStream, // input can be either string and readable stream
-		lineSeparator: ['\n', '\r\n'], // You can use multiple lineSeparator 
-		encoding: 'utf8', // See encodings supported by iconv-lite 
+		input: fs.createReadStream(path_to_file), // input can be either string and readable stream 
 	});
 	
 	while(true) {
@@ -40,6 +41,38 @@ async function main () {
 }
 ```
 
+### Use string in input
+```js
+const nl = nexline({
+	input: '123\n456\r\n789', 
+});
+```
+
+### Use other encodings
+[See encodings supported by iconv-lite](https://github.com/ashtuchkin/iconv-lite/wiki/Supported-Encodings)
+```js
+const nl = nexline({
+	input: fs.createReadStream(path_to_file), 
+	encoding: 'cp949',
+});
+```
+
+### Use other lineSeparator
+```js
+const nl = nexline({
+	input: '123;456;789', 
+	lineSeparator: ';',
+});
+```
+
+### Use multiple lineSeparator
+```js
+const nl = nexline({
+	input: '123;456\n789', 
+	lineSeparator: [';', '\n'],
+});
+```
+
 ## Methods
 | Name          |  Description    |
 | ------------- | --------------- |
@@ -48,6 +81,6 @@ async function main () {
 ## Options
 | Name          | Default                     |  Description    |
 | ------------- | --------------------------- | --------------- |
-| input         | undefined                   | **Required**, Readable stream or string    |
+| input         | undefined                   | **Required**, Readable stream or string |
 | lineSeparator | \['\n', '\r\n'\]            | Any string more than one character. You can use multiple line seperator |
 | encoding      | 'utf8'                      | [See encodings supported by iconv-lite](https://github.com/ashtuchkin/iconv-lite/wiki/Supported-Encodings) |
