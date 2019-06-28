@@ -1,8 +1,12 @@
 # Nexline
 Reading stream or string line by line 
+* Lightweight
+* Small memory foot print
 
 ## Why I made this?
-Node.js's default readline module is great but it's pause() method does not work immediately.
+Node.js's default readline module is great but it's `pause()` method does not work immediately.
+
+I made some wrapper to fix that issue before, but it was not enough.
 
 Even if it works immediately, it is still inconvenient.
 
@@ -11,6 +15,7 @@ If I execute async function over line by line, I need to using `pause()` and `re
 I wanted better way to do that.
 
 ## Install with npm
+Required Node.js version >= 8.0.0.
 ```
 npm install nexline
 ```
@@ -33,6 +38,11 @@ async function main () {
 	}
 }
 ```
+
+## Methods
+| Name          |  Description    |
+| ------------- | --------------- |
+| next()        | **async**, It returns line until all data is read. If all data is read, returns `null`  |
 
 ## Options
 | Name          | Default                     |  Description    |
