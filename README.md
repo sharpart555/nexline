@@ -28,6 +28,7 @@ async function main () {
 	const inputStream = fs.createReadStream(path_to_file);
 	const nl = nexline({
 		input: inputStream, // input can be either string and readable stream
+		lineSeparator: ['\n', '\r\n'], // You can use multiple lineSeparator 
 		encoding: 'utf8', // See encodings supported by iconv-lite 
 	});
 	
@@ -48,5 +49,5 @@ async function main () {
 | Name          | Default                     |  Description    |
 | ------------- | --------------------------- | --------------- |
 | input         | undefined                   | **Required**, Readable stream or string    |
-| lineSeperator | \['\n', '\r\n'\]            | Any string more than one character. You can use multiple line seperator |
+| lineSeparator | \['\n', '\r\n'\]            | Any string more than one character. You can use multiple line seperator |
 | encoding      | 'utf8'                      | [See encodings supported by iconv-lite](https://github.com/ashtuchkin/iconv-lite/wiki/Supported-Encodings) |
