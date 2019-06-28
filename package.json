@@ -1,18 +1,19 @@
 {
-  "name": "nextline",
+  "name": "nexline",
   "version": "0.1.0",
   "description": "Reading stream or string line by line",
   "author": "Youngho Jin",
   "license": "MIT",
-  "homepage": "https://github.com/sharpart555/nextline",
+  "homepage": "https://github.com/sharpart555/nexline",
   "repository": {
     "type": "git",
-    "url": "https://github.com/sharpart555/nextline"
+    "url": "https://github.com/sharpart555/nexline"
   },
   "bugs": {
-    "url": "https://github.com/sharpart555/nextline/issues"
+    "url": "https://github.com/sharpart555/nexline/issues"
   },
   "keywords": [
+    "nexline",
     "nextline",
     "next-line",
     "line-next",

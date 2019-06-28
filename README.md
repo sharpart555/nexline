@@ -1,4 +1,4 @@
-# Nextline
+# Nexline
 Reading stream or string line by line 
 
 ## Why I made this?
@@ -12,16 +12,16 @@ I wanted better way to do that.
 
 ## Install with npm
 ```
-npm install nextline
+npm install nexline
 ```
  
 ## Usage
 ```js
-const nextline = require('nextline');
+const nexline = require('nexline');
 
 async function main () {
 	const inputStream = fs.createReadStream(path_to_file);
-	const nl = nextline({
+	const nl = nexline({
 		input: inputStream, // input can be either string and readable stream
 		encoding: 'utf8', // See encodings supported by iconv-lite 
 	});

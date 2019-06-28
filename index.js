@@ -15,13 +15,13 @@ const INPUT_STATUS = {
 };
 
 /**
- * Create nextline
+ * Create nexline
  * @param param
  * @param param.input string or Readable stream
  * @param [param.lineSeparator] if not specified, auto detect crlf and lf
  * @param [param.encoding] input stream encoding using iconv-lite
  */
-function nextline(param) {
+function nexline(param) {
 	/**
 	 * Verify parameter
 	 */
@@ -182,4 +182,4 @@ function nextline(param) {
 /**
  * Export
  */
-module.exports = nextline;
+module.exports = nexline;
