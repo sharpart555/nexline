@@ -2,6 +2,7 @@
  * Import
  */
 const stream = require('stream');
+const iconv = require('iconv-lite');
 const commonUtil = require('./util/commonUtil');
 
 /**
@@ -18,6 +19,7 @@ const INPUT_STATUS = {
  * @param param
  * @param param.input string or Readable stream
  * @param [param.lineSeparator] if not specified, auto detect crlf and lf
+ * @param [param.encoding] input stream encoding using iconv-lite
  */
 function nextline(param) {
 	/**
@@ -25,11 +27,13 @@ function nextline(param) {
 	 */
 	const param2 = {
 		lineSeparator: ['\n', '\r\n'],
+		encoding: 'utf8',
 		...param,
 	};
 
+	const { input, encoding } = param2;
+
 	// Verify input
-	const input = param2.input;
 	if (!input) throw new Error('Empty input');
 	if (typeof input !== 'string' && !(input instanceof stream.Readable)) throw new Error('Invalid input. Input must be string or readable stream');
 
@@ -39,6 +43,9 @@ function nextline(param) {
 	for (const item of lineSeparatorList) {
 		if (typeof item !== 'string' || item.length === 0) throw new Error('Invalid lineSeparator, lineSeparator must be string and must exceed one character');
 	}
+
+	// Verify encoding
+	if (!iconv.encodingExists(encoding)) throw new Error('Invalid encoding. Check encodings supported by iconv-lite');
 
 	/**
 	 * Variables
@@ -156,7 +163,7 @@ function nextline(param) {
 				if (chunkBuffer === null) {
 					await prepareStream();
 				} else {
-					const chunkText = chunkBuffer.toString();
+					const chunkText = iconv.decode(chunkBuffer, encoding);
 					result = commonUtil.concat(result, chunkText);
 					if (commonUtil.hasLineSeparator(chunkText, lineSeparatorList)) return result;
 				}
