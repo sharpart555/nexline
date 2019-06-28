@@ -79,7 +79,6 @@ function nextline(param) {
 		// Prepare stream
 		if (isStream && inputStatus === INPUT_STATUS.BEFORE_READY) {
 			await prepareStream();
-			inputStatus = INPUT_STATUS.READY;
 		}
 
 		// If bufferString contains lineSeparator
@@ -97,7 +96,7 @@ function nextline(param) {
 		}
 
 		// Read more string from stream
-		const moreString = readStream();
+		const moreString = await readStream();
 
 		// Concat to bufferString
 		bufferString = commonUtil.concat(bufferString, moreString);
@@ -120,9 +119,19 @@ function nextline(param) {
 	 */
 	async function prepareStream() {
 		return new Promise((resolve) => {
-			input.on('readable', () => {
+			input.once('readable', () => {
 				inputStatus = INPUT_STATUS.READY;
-				resolve();
+				resolve(true);
+			});
+
+			input.once('end', (data) => {
+				inputStatus = INPUT_STATUS.END;
+				resolve(false);
+			});
+
+			input.once('error', (error) => {
+				inputStatus = INPUT_STATUS.END;
+				reject(error);
 			});
 		});
 	}
@@ -130,7 +139,7 @@ function nextline(param) {
 	/**
 	 * Read stream
 	 */
-	function readStream() {
+	async function readStream() {
 		if (inputStatus === INPUT_STATUS.END) return null;
 
 		if (typeof input === 'string') {
@@ -141,10 +150,11 @@ function nextline(param) {
 			// If input is stream
 			let result = null;
 			while(true) {
+				if (inputStatus === INPUT_STATUS.END) return result;
+
 				const chunkBuffer = input.read();
 				if (chunkBuffer === null) {
-					inputStatus = INPUT_STATUS.END;
-					return result;
+					await prepareStream();
 				} else {
 					const chunkText = chunkBuffer.toString();
 					result = commonUtil.concat(result, chunkText);
