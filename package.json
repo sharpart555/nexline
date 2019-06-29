@@ -1,7 +1,7 @@
 {
   "name": "nexline",
-  "version": "0.1.2",
-  "description": "Reading stream or string line by line",
+  "version": "0.2.0",
+  "description": "Reading stream, string, buffer line by line. Great for execute async job over line by line",
   "author": "Youngho Jin",
   "license": "MIT",
   "homepage": "https://github.com/sharpart555/nexline",
@@ -35,6 +35,7 @@
     "eslint": "^6.0.1",
     "eslint-config-prettier": "^6.0.0",
     "eslint-plugin-prettier": "^3.1.0",
+    "mocha": "^6.1.4",
     "prettier": "^1.18.2",
     "prettier-eslint": "^9.0.0"
   }
