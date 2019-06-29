@@ -96,3 +96,9 @@ const nl = nexline({
 | input         | undefined                   | **Required.** Readable stream, string, buffer |
 | lineSeparator | \['\n', '\r\n'\]            | Any string more than one character. You can use multiple line separator |
 | encoding      | 'utf8'                      | [See encodings supported by iconv-lite](https://github.com/ashtuchkin/iconv-lite/wiki/Supported-Encodings) |
+
+## Contribution
+Pull requests and stars are always welcome. For bugs and feature requests, [please create an issue](https://github.com/sharpart555/nexline/issues/new)
+
+## License
+Copyright &copy; 2019 Youngho Jin. Released under the [MIT License](https://github.com/sharpart555/nexline/blob/master/LICENSE)
