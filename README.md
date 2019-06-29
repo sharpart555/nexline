@@ -1,5 +1,8 @@
 # Nexline
-Reading stream, string, buffer line by line. Great for execute async job over line by line
+Reading stream, string, buffer line by line.
+
+Great for execute async job over line by line in large file.
+
 * Lightweight
 * Handle large file with small memory foot print
 * Support various encodings
