@@ -19,8 +19,8 @@ Great for execute async job over line by line in large file.
 Node.js's default readline module is great but it's `pause()` method does not work immediately.\
 I made some wrapper to fix that issue before, but it was not enough.\
 Even if `pause()` works immediately, it is still inconvenient.\
-If I want to execute async function over line by line, I have to call `pause()` and `resume()` at every line.\
-I needed better way to do that.
+If I want to execute async function over line by line in large file, I have to call `pause()` and `resume()` at every line.\
+I needed better way to do that without putting them all in my memory.
 
 ## Install with npm
 Required Node.js version >= 8.0.0.
@@ -107,12 +107,12 @@ const nl = nexline({
 ## Methods
 | Name          |  Description    |
 | ------------- | --------------- |
-| next()        | **async**, It returns line until all data is read. If all data is read, returns `null`  |
+| next()        | **async**, It returns line until all data is read, after then returns `null`  |
 
 ## Options
 | Name          | Default                     |  Description    |
 | ------------- | --------------------------- | --------------- |
-| input         | undefined                   | **Required.** Readable stream, string, buffer |
+| input         | undefined                   | **Required.** Readable stream, string, buffer, You can use multiple inputs |
 | lineSeparator | \['\n', '\r\n'\]            | Any string more than one character. You can use multiple line separator |
 | encoding      | 'utf8'                      | [See encodings supported by iconv-lite](https://github.com/ashtuchkin/iconv-lite/wiki/Supported-Encodings) |
 
