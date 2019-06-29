@@ -1,4 +1,8 @@
 # Nexline
+[![npm](https://img.shields.io/npm/v/nexline.svg)](https://www.npmjs.com/package/nexline)
+[![npm](https://img.shields.io/npm/dt/nexline.svg)](https://www.npmjs.com/package/nexline)
+[![GitHub license](https://img.shields.io/github/license/sharpart555/nexline.svg)](https://github.com/sharpart555/nexline/blob/master/LICENSE)
+
 Reading stream, string, buffer line by line.
 
 Great for execute async job over line by line in large file.
@@ -34,7 +38,7 @@ const fs = require('fs');
 
 async function main () {
 	const nl = nexline({
-		input: fs.createReadStream(path_to_file), // input can be either string and readable stream 
+		input: fs.createReadStream(path_to_file), // input can be stream, string and buffer 
 	});
 	
 	while(true) {
