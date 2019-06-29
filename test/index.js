@@ -101,14 +101,14 @@ describe('Nexline test', async () => {
 		assert.throws(() => {
 			nexline({
 				input: '123',
-				lineSeparator: true
+				lineSeparator: true,
 			});
 		});
 
 		assert.throws(() => {
 			nexline({
 				input: '123',
-				encoding: 'notSupportedEncoding'
+				encoding: 'notSupportedEncoding',
 			});
 		});
 	});
