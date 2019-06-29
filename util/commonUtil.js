@@ -1,4 +1,20 @@
 /**
+ * Import
+ */
+const stream = require('stream');
+const { INPUT_TYPE } = require('../code/code');
+
+/**
+ * Check and return inputType
+ * @param input
+ */
+function getInputType(input) {
+	if (typeof input === 'string') return INPUT_TYPE.STRING;
+	else if (input instanceof stream.Readable) return INPUT_TYPE.STREAM;
+	else if (Buffer.isBuffer(input)) return INPUT_TYPE.BUFFER;
+}
+
+/**
  * Get lineSeparator index
  * @param text
  * @param lineSeparatorList
@@ -73,6 +89,7 @@ function concat(a, b) {
 }
 
 module.exports = {
+	getInputType,
 	getLineSeparatorPosition,
 	getLineAndRest,
 	hasLineSeparator,
