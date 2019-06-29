@@ -3,21 +3,19 @@
  */
 const stream = require('stream');
 const iconv = require('iconv-lite');
+
+const code = require('./code/code');
 const commonUtil = require('./util/commonUtil');
 
 /**
  * Variables
  */
-const INPUT_STATUS = {
-	BEFORE_READY: 0,
-	READY: 1,
-	END: 2,
-};
+const { INPUT_STATUS, INPUT_TYPE } = code;
 
 /**
  * Create nexline
  * @param param
- * @param param.input string or Readable stream
+ * @param param.input string or buffer or Readable stream
  * @param [param.lineSeparator] if not specified, auto detect crlf and lf
  * @param [param.encoding] input stream encoding using iconv-lite
  */
@@ -34,8 +32,12 @@ function nexline(param) {
 	const { input, encoding } = param2;
 
 	// Verify input
-	if (!input) throw new Error('Empty input');
-	if (typeof input !== 'string' && !(input instanceof stream.Readable)) throw new Error('Invalid input. Input must be string or readable stream');
+	let inputType;
+	if (typeof input === 'string') inputType = INPUT_TYPE.STRING;
+	else if (input instanceof stream.Readable) inputType = INPUT_TYPE.STREAM;
+	else if (Buffer.isBuffer(input)) inputType = INPUT_TYPE.BUFFER;
+
+	if (inputType === undefined) throw new Error('Invalid input. Input must be readable stream or string or buffer');
 
 	// Verify lineSeparator
 	const lineSeparatorList = Array.isArray(param2.lineSeparator) ? [...param2.lineSeparator] : [param2.lineSeparator];
@@ -51,8 +53,7 @@ function nexline(param) {
 	 * Variables
 	 */
 	const nextQueue = [];
-	const isStream = input instanceof stream.Readable;
-	let inputStatus = isStream ? INPUT_STATUS.BEFORE_READY : INPUT_STATUS.READY;
+	let inputStatus = inputType === INPUT_TYPE.STREAM ? INPUT_STATUS.BEFORE_READY : INPUT_STATUS.READY;
 	let isBusy = false;
 	let isFinished = false;
 	let bufferString = '';
@@ -84,7 +85,7 @@ function nexline(param) {
 		}
 
 		// Prepare stream
-		if (isStream && inputStatus === INPUT_STATUS.BEFORE_READY) {
+		if (inputType === INPUT_TYPE.STREAM && inputStatus === INPUT_STATUS.BEFORE_READY) {
 			await prepareStream();
 		}
 
@@ -103,7 +104,7 @@ function nexline(param) {
 		}
 
 		// Read more string from stream
-		const moreString = await readStream();
+		const moreString = await readInput();
 
 		// Concat to bufferString
 		bufferString = commonUtil.concat(bufferString, moreString);
@@ -144,19 +145,23 @@ function nexline(param) {
 	}
 
 	/**
-	 * Read stream
+	 * Read data from input
 	 */
-	async function readStream() {
+	async function readInput() {
 		if (inputStatus === INPUT_STATUS.END) return null;
 
-		if (typeof input === 'string') {
+		if (inputType === INPUT_TYPE.STRING) {
 			// If input is string, return string at first, return null at second
 			inputStatus = INPUT_STATUS.END;
 			return input;
+		} else if (inputType === INPUT_TYPE.BUFFER) {
+			// If input is buffer, return decoded string at first, return null at second
+			inputStatus = INPUT_STATUS.END;
+			return iconv.decode(input, encoding);
 		} else {
 			// If input is stream
 			let result = null;
-			while(true) {
+			while (true) {
 				if (inputStatus === INPUT_STATUS.END) return result;
 
 				const chunkBuffer = input.read();
