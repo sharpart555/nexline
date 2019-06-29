@@ -93,5 +93,5 @@ const nl = nexline({
 | Name          | Default                     |  Description    |
 | ------------- | --------------------------- | --------------- |
 | input         | undefined                   | **Required.** Readable stream, string, buffer |
-| lineSeparator | \['\n', '\r\n'\]            | Any string more than one character. You can use multiple line seperator |
+| lineSeparator | \['\n', '\r\n'\]            | Any string more than one character. You can use multiple line separator |
 | encoding      | 'utf8'                      | [See encodings supported by iconv-lite](https://github.com/ashtuchkin/iconv-lite/wiki/Supported-Encodings) |
