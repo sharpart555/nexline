@@ -1,7 +1,6 @@
 /**
  * Import
  */
-const stream = require('stream');
 const iconv = require('iconv-lite');
 
 const code = require('./code/code');
@@ -21,26 +20,16 @@ const { INPUT_STATUS, INPUT_TYPE } = code;
  */
 function nexline(param) {
 	/**
-	 * Verify parameter
+	 * Verify parameters
 	 */
-	const param2 = {
-		lineSeparator: ['\n', '\r\n'],
-		encoding: 'utf8',
-		...param,
-	};
-
-	const { input, encoding } = param2;
+	const { input, encoding } = param;
 
 	// Verify input
-	let inputType;
-	if (typeof input === 'string') inputType = INPUT_TYPE.STRING;
-	else if (input instanceof stream.Readable) inputType = INPUT_TYPE.STREAM;
-	else if (Buffer.isBuffer(input)) inputType = INPUT_TYPE.BUFFER;
-
+	const inputType = commonUtil.getInputType(input);
 	if (inputType === undefined) throw new Error('Invalid input. Input must be readable stream or string or buffer');
 
 	// Verify lineSeparator
-	const lineSeparatorList = Array.isArray(param2.lineSeparator) ? [...param2.lineSeparator] : [param2.lineSeparator];
+	const lineSeparatorList = Array.isArray(param.lineSeparator) ? [...param.lineSeparator] : [param.lineSeparator];
 	if (lineSeparatorList.length === 0) throw new Error('Invalid lineSeparator');
 	for (const item of lineSeparatorList) {
 		if (typeof item !== 'string' || item.length === 0) throw new Error('Invalid lineSeparator, lineSeparator must be string and must exceed one character');
@@ -126,7 +115,7 @@ function nexline(param) {
 	 * Prepare stream ready to read
 	 */
 	async function prepareStream() {
-		return new Promise((resolve) => {
+		return new Promise((resolve, reject) => {
 			input.once('readable', () => {
 				inputStatus = INPUT_STATUS.READY;
 				resolve(true);
