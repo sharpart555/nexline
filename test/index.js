@@ -111,6 +111,21 @@ describe('Nexline test', async () => {
 		assert.strictEqual(null, await nl.next());
 	});
 
+	it('Empty line test', async () => {
+		const nl = nexline({
+			input: '\n\n\n\n\n\n',
+		});
+
+		assert.strictEqual('', await nl.next());
+		assert.strictEqual('', await nl.next());
+		assert.strictEqual('', await nl.next());
+		assert.strictEqual('', await nl.next());
+		assert.strictEqual('', await nl.next());
+		assert.strictEqual('', await nl.next());
+		assert.strictEqual('', await nl.next());
+		assert.strictEqual(null, await nl.next());
+	});
+
 	it('Invalid parameter test', async () => {
 		assert.throws(() => {
 			nexline();
