@@ -97,7 +97,7 @@ function nexline(param) {
 				bufferString = lineInfo.rest;
 
 				// If nextQueue is not empty. continue processing
-				if (nextQueue.length) process.nextTick(processQueue);
+				if (nextQueue.length) process.nextTick(processNextQueue);
 				else isBusy = false;
 				return;
 			}
