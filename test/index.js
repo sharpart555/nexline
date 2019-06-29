@@ -39,6 +39,32 @@ describe('Nexline test', async () => {
 		assert.strictEqual(null, await nl.next());
 	});
 
+	it('Multiple input test', async () => {
+		const nl = nexline({
+			input: [
+				fs.createReadStream(path.resolve(__dirname, './data/simple.txt')), //
+				fs.createReadStream(path.resolve(__dirname, './data/empty.txt')),
+				'123\r\n456\n789',
+				Buffer.from('123\r\n456\n789'),
+			],
+			lineSeparator: [';', '\n', '\r\n'],
+		});
+
+		assert.strictEqual('Test Line 1', await nl.next());
+		assert.strictEqual('Test Line 2', await nl.next());
+		assert.strictEqual('Test Line 3', await nl.next());
+		assert.strictEqual('Test Line 4', await nl.next());
+		assert.strictEqual('Test Line 5', await nl.next());
+		assert.strictEqual('', await nl.next());
+		assert.strictEqual('123', await nl.next());
+		assert.strictEqual('456', await nl.next());
+		assert.strictEqual('789', await nl.next());
+		assert.strictEqual('123', await nl.next());
+		assert.strictEqual('456', await nl.next());
+		assert.strictEqual('789', await nl.next());
+		assert.strictEqual(null, await nl.next());
+	});
+
 	it('Encoding test', async () => {
 		const nl = nexline({
 			input: fs.createReadStream(path.resolve(__dirname, './data/cp949.txt')),
@@ -87,6 +113,21 @@ describe('Nexline test', async () => {
 		assert.strictEqual(null, await nl.next());
 	});
 
+	it('Empty line test', async () => {
+		const nl = nexline({
+			input: '\n\n\n\n\n\n',
+		});
+
+		assert.strictEqual('', await nl.next());
+		assert.strictEqual('', await nl.next());
+		assert.strictEqual('', await nl.next());
+		assert.strictEqual('', await nl.next());
+		assert.strictEqual('', await nl.next());
+		assert.strictEqual('', await nl.next());
+		assert.strictEqual('', await nl.next());
+		assert.strictEqual(null, await nl.next());
+	});
+
 	it('Invalid parameter test', async () => {
 		assert.throws(() => {
 			nexline();
@@ -101,14 +142,14 @@ describe('Nexline test', async () => {
 		assert.throws(() => {
 			nexline({
 				input: '123',
-				lineSeparator: true
+				lineSeparator: true,
 			});
 		});
 
 		assert.throws(() => {
 			nexline({
 				input: '123',
-				encoding: 'notSupportedEncoding'
+				encoding: 'notSupportedEncoding',
 			});
 		});
 	});
