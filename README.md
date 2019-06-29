@@ -1,8 +1,10 @@
 # Nexline
-Reading stream or string line by line 
+Reading stream, string, buffer line by line. Great for execute async job over line by line
 * Lightweight
 * Small memory foot print
-* Great for execute async job over line by line
+* Support various encodings
+* Support custom line separators
+* Support multiple line separators
 
 ## Why I made this?
 Node.js's default readline module is great but it's `pause()` method does not work immediately.
@@ -45,6 +47,13 @@ async function main () {
 ```js
 const nl = nexline({
 	input: '123\n456\r\n789', 
+});
+```
+
+### Use Buffer in input
+```js
+const nl = nexline({
+	input: Buffer.from('123\n456\r\n789'),
 });
 ```
 
