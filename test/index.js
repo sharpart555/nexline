@@ -77,4 +77,30 @@ describe('Nexline test', async () => {
 		assert.strictEqual('', await nl.next());
 		assert.strictEqual(null, await nl.next());
 	});
+
+	it('Invalid parameter test', async () => {
+		assert.throws(() => {
+			nexline();
+		});
+
+		assert.throws(() => {
+			nexline({
+				input: 123,
+			});
+		});
+
+		assert.throws(() => {
+			nexline({
+				input: '123',
+				lineSeparator: true
+			});
+		});
+
+		assert.throws(() => {
+			nexline({
+				input: '123',
+				encoding: 'notSupportedEncoding'
+			});
+		});
+	});
 });
