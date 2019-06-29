@@ -33,15 +33,14 @@ const nexline = require('nexline');
 const fs = require('fs');
 
 async function main () {
-	// Basic Usage
 	const nl = nexline({
 		input: fs.createReadStream(path_to_file), // input can be either string and readable stream 
 	});
 	
 	while(true) {
 		const line = await nl.next();
-		if (line === null) break; // If all data is read, returns null
 		console.log(line);
+		if (line === null) break; // If all data is read, returns null
 	}
 }
 ```
@@ -93,6 +92,6 @@ const nl = nexline({
 ## Options
 | Name          | Default                     |  Description    |
 | ------------- | --------------------------- | --------------- |
-| input         | undefined                   | **Required**, Readable stream or string |
+| input         | undefined                   | **Required.** Readable stream, string, buffer |
 | lineSeparator | \['\n', '\r\n'\]            | Any string more than one character. You can use multiple line seperator |
 | encoding      | 'utf8'                      | [See encodings supported by iconv-lite](https://github.com/ashtuchkin/iconv-lite/wiki/Supported-Encodings) |
