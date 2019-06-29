@@ -66,6 +66,18 @@ const nl = nexline({
 });
 ```
 
+### Use multiple input
+```js
+const nl = nexline({
+  input: [
+    fs.createReadStream(path_to_file1),
+    fs.createReadStream(path_to_file2),
+    'foo\nbar\nbaz',
+    Buffer.from('foo\nbar\nbaz'),
+  ],
+});
+```
+
 ### Use other encodings
 [See encodings supported by iconv-lite](https://github.com/ashtuchkin/iconv-lite/wiki/Supported-Encodings)
 ```js
