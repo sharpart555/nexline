@@ -2,3 +2,6 @@
 .idea
 node_modules
 test*
+.eslintignore
+.eslintrc.js
+.prettierrc.js
