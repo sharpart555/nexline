@@ -28,6 +28,17 @@ describe('Nexline test', async () => {
 		assert.strictEqual(null, await nl.next());
 	});
 
+	it('Buffer input test', async () => {
+		const nl = nexline({
+			input: Buffer.from('123\r\n456\n789'),
+		});
+
+		assert.strictEqual('123', await nl.next());
+		assert.strictEqual('456', await nl.next());
+		assert.strictEqual('789', await nl.next());
+		assert.strictEqual(null, await nl.next());
+	});
+
 	it('Encoding test', async () => {
 		const nl = nexline({
 			input: fs.createReadStream(path.resolve(__dirname, './data/cp949.txt')),
