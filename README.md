@@ -1,7 +1,10 @@
 # Nexline
-Reading stream, string, buffer line by line. Great for execute async job over line by line
+Reading stream, string, buffer line by line.
+
+Great for execute async job over line by line in large file.
+
 * Lightweight
-* Small memory foot print
+* Handle large file with small memory foot print
 * Support various encodings
 * Support custom line separators
 * Support multiple line separators
@@ -11,11 +14,11 @@ Node.js's default readline module is great but it's `pause()` method does not wo
 
 I made some wrapper to fix that issue before, but it was not enough.
 
-Even if it works immediately, it is still inconvenient.
+Even if `pause()` works immediately, it is still inconvenient.
 
-If I execute async function over line by line, I need to using `pause()` and `resume()` at every line 
+If I want to execute async function over line by line, I have to call `pause()` and `resume()` at every line 
 
-I wanted better way to do that.
+I needed better way to do that.
 
 ## Install with npm
 Required Node.js version >= 8.0.0.
