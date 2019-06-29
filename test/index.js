@@ -78,6 +78,15 @@ describe('Nexline test', async () => {
 		assert.strictEqual(null, await nl.next());
 	});
 
+	it('Empty file test', async () => {
+		const nl = nexline({
+			input: fs.createReadStream(path.resolve(__dirname, './data/empty.txt')),
+		});
+
+		assert.strictEqual('', await nl.next());
+		assert.strictEqual(null, await nl.next());
+	});
+
 	it('Invalid parameter test', async () => {
 		assert.throws(() => {
 			nexline();
