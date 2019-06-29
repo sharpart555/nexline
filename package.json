@@ -1,6 +1,6 @@
 {
   "name": "nexline",
-  "version": "0.1.3",
+  "version": "0.2.0",
   "description": "Reading stream, string, buffer line by line. Great for execute async job over line by line",
   "author": "Youngho Jin",
   "license": "MIT",
