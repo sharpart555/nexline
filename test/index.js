@@ -43,6 +43,7 @@ describe('Nexline test', async () => {
 		const nl = nexline({
 			input: [
 				fs.createReadStream(path.resolve(__dirname, './data/simple.txt')), //
+				fs.createReadStream(path.resolve(__dirname, './data/empty.txt')),
 				'123\r\n456\n789',
 				Buffer.from('123\r\n456\n789'),
 			],
@@ -54,6 +55,7 @@ describe('Nexline test', async () => {
 		assert.strictEqual('Test Line 3', await nl.next());
 		assert.strictEqual('Test Line 4', await nl.next());
 		assert.strictEqual('Test Line 5', await nl.next());
+		assert.strictEqual('', await nl.next());
 		assert.strictEqual('123', await nl.next());
 		assert.strictEqual('456', await nl.next());
 		assert.strictEqual('789', await nl.next());
