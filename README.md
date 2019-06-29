@@ -48,15 +48,21 @@ async function main () {
 
 ### Use string in input
 ```js
-const nl = nexline({
-  input: '123\n456\r\n789', 
-});
+async function main () {
+  const nl = nexline({
+    input: 'foo\nbar\r\nbaz', // Support both CRLF and LF by default
+  });
+  console.log(await nl.next()); // 'foo'
+  console.log(await nl.next()); // 'bar'
+  console.log(await nl.next()); // 'baz'
+  console.log(await nl.next()); // null
+}
 ```
 
 ### Use Buffer in input
 ```js
 const nl = nexline({
-  input: Buffer.from('123\n456\r\n789'),
+  input: Buffer.from('foo\nbar\nbaz'),
 });
 ```
 
@@ -72,7 +78,7 @@ const nl = nexline({
 ### Use other lineSeparator
 ```js
 const nl = nexline({
-  input: '123;456;789', 
+  input: 'foo;bar;baz', 
   lineSeparator: ';',
 });
 ```
@@ -80,7 +86,7 @@ const nl = nexline({
 ### Use multiple lineSeparator
 ```js
 const nl = nexline({
-  input: '123;456\n789', 
+  input: 'foo;bar\nbaz', 
   lineSeparator: [';', '\n'],
 });
 ```
