@@ -26,6 +26,7 @@ module.exports = {
 		'no-regex-spaces': 'off',
 		'no-unused-vars': 'off',
 		'no-useless-escape': 'off',
+		'require-atomic-updates': 'off',
 
 		'prefer-const': 'warn',
 
