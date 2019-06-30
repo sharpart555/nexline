@@ -83,9 +83,22 @@ function hasLineSeparator(text, lineSeparatorList) {
  */
 function concat(a, b) {
 	if (a === null && b === null) return null;
-	if (a === null) a = '';
-	if (b === null) b = '';
-	return a + b;
+
+	const textA = a === null ? '' : a;
+	const textB = b === null ? '' : b;
+	return textA + textB;
+}
+
+/**
+ * Remove undefined key in object
+ * @param object
+ */
+function removeUndefined(object) {
+	for (const k in object) {
+		if (Object.prototype.hasOwnProperty.call(object, k) && object[k] === undefined) delete object[k];
+	}
+
+	return object;
 }
 
 module.exports = {
@@ -94,4 +107,5 @@ module.exports = {
 	getLineAndRest,
 	hasLineSeparator,
 	concat,
+	removeUndefined,
 };

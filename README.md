@@ -9,7 +9,7 @@ Reading stream, string, buffer line by line.\
 Great for execute async job over line by line in large file.
 
 * Lightweight
-* Handle large file with small memory foot print
+* Handle large file with small memory footprint
 * Support various encodings
 * Support custom line separators
 * Support multiple line separators
