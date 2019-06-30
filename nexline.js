@@ -122,20 +122,30 @@ function nexline(param) {
 	 */
 	async function prepareStream() {
 		return new Promise((resolve, reject) => {
-			input.once('readable', () => {
+			input.once('readable', _handleReadable);
+			input.once('end', _handleEnd);
+			input.once('error', _handleError);
+
+			function _handleReadable() {
 				inputStatus = INPUT_STATUS.READY;
+				input.off('end', _handleEnd);
+				input.off('error', _handleError);
 				resolve(true);
-			});
+			}
 
-			input.once('end', (data) => {
+			function _handleEnd() {
 				inputStatus = INPUT_STATUS.END;
+				input.off('readable', _handleReadable);
+				input.off('error', _handleError);
 				resolve(false);
-			});
+			}
 
-			input.once('error', (error) => {
+			function _handleError(error) {
 				inputStatus = INPUT_STATUS.END;
+				input.off('readable', _handleReadable);
+				input.off('end', _handleEnd);
 				reject(error);
-			});
+			}
 		});
 	}
 
