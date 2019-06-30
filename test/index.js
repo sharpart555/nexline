@@ -65,6 +65,18 @@ describe('Nexline test', async () => {
 		assert.strictEqual(null, await nl.next());
 	});
 
+	it('Broken buffer test', async () => {
+		const nl = nexline({
+			input: fs.createReadStream(path.resolve(__dirname, './data/brokenBuffer.txt'), { highWaterMark: 128 }),
+		});
+
+		while (true) {
+			const line = await nl.next();
+			assert.strictEqual(line.length, 70);
+			if (line === null) break;
+		}
+	});
+
 	it('Encoding test', async () => {
 		const nl = nexline({
 			input: fs.createReadStream(path.resolve(__dirname, './data/cp949.txt')),
