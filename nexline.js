@@ -19,17 +19,23 @@ const { INPUT_STATUS, INPUT_TYPE } = code;
  * @param [param.encoding] input stream encoding using iconv-lite
  */
 function nexline(param) {
+	const param2 = {
+		lineSeparator: ['\n', '\r\n'],
+		encoding: 'utf8',
+		...param,
+	};
+
 	/**
 	 * Verify parameters
 	 */
-	const { input, encoding } = param;
+	const { input, encoding } = param2;
 
 	// Verify input
 	const inputType = commonUtil.getInputType(input);
 	if (inputType === undefined) throw new Error('Invalid input. Input must be readable stream or string or buffer');
 
 	// Verify lineSeparator
-	const lineSeparatorList = Array.isArray(param.lineSeparator) ? [...param.lineSeparator] : [param.lineSeparator];
+	const lineSeparatorList = Array.isArray(param2.lineSeparator) ? [...param2.lineSeparator] : [param2.lineSeparator];
 	if (lineSeparatorList.length === 0) throw new Error('Invalid lineSeparator');
 	for (const item of lineSeparatorList) {
 		if (typeof item !== 'string' || item.length === 0) throw new Error('Invalid lineSeparator, lineSeparator must be string and must exceed one character');

@@ -2,6 +2,7 @@
  * Import
  */
 const nexline = require('./nexline');
+const commonUtil = require('./util/commonUtil');
 
 /**
  * Nexline wrapper for supporting multiple inputs
@@ -10,27 +11,22 @@ const nexline = require('./nexline');
  * @param [param.lineSeparator]
  * @param [param.encoding]
  */
-function nexlineMultiInput(param) {
-	// Setup default parameter
-	const param2 = {
-		lineSeparator: ['\n', '\r\n'],
-		encoding: 'utf8',
-		...param,
-	};
-
+function multiInputWrapper(param) {
 	// Verify input
-	const inputList = Array.isArray(param2.input) ? [...param2.input] : [param2.input];
+	const inputList = Array.isArray(param.input) ? [...param.input] : [param.input];
 	if (inputList.length === 0) throw new Error('Invalid input');
 
 	// Create nexlines for each input
 	const nlList = [];
 	for (const item of inputList) {
 		nlList.push(
-			nexline({
-				input: item,
-				lineSeparator: param2.lineSeparator,
-				encoding: param2.encoding,
-			})
+			nexline(
+				commonUtil.removeUndefined({
+					input: item,
+					lineSeparator: param.lineSeparator,
+					encoding: param.encoding,
+				})
+			)
 		);
 	}
 
@@ -64,4 +60,4 @@ function nexlineMultiInput(param) {
 	};
 }
 
-module.exports = nexlineMultiInput;
+module.exports = multiInputWrapper;
