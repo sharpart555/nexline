@@ -89,10 +89,23 @@ function concat(a, b) {
 	return textA + textB;
 }
 
+/**
+ * Remove undefined key in object
+ * @param object
+ */
+function removeUndefined(object) {
+	for (const k in object) {
+		if (Object.prototype.hasOwnProperty.call(object, k) && object[k] === undefined) delete object[k];
+	}
+
+	return object;
+}
+
 module.exports = {
 	getInputType,
 	getLineSeparatorPosition,
 	getLineAndRest,
 	hasLineSeparator,
 	concat,
+	removeUndefined,
 };
