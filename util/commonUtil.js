@@ -83,9 +83,10 @@ function hasLineSeparator(text, lineSeparatorList) {
  */
 function concat(a, b) {
 	if (a === null && b === null) return null;
-	if (a === null) a = '';
-	if (b === null) b = '';
-	return a + b;
+
+	const textA = a === null ? '' : a;
+	const textB = b === null ? '' : b;
+	return textA + textB;
 }
 
 module.exports = {
