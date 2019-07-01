@@ -72,8 +72,8 @@ describe('Nexline test', async () => {
 
 		while (true) {
 			const line = await nl.next();
-			assert.strictEqual(line.length, 70);
 			if (line === null) break;
+			assert.strictEqual(line.length, 70);
 		}
 	});
 
