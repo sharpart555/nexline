@@ -16,10 +16,10 @@ function getInputType(input) {
 
 /**
  * Get lineSeparator index
- * @param text
+ * @param buffer
  * @param lineSeparatorList
  */
-function getLineSeparatorPosition(text, lineSeparatorList) {
+function getLineSeparatorPosition(buffer, lineSeparatorList) {
 	const result = {
 		index: -1,
 		length: 0,
@@ -27,7 +27,7 @@ function getLineSeparatorPosition(text, lineSeparatorList) {
 
 	// Iterate over lineSeparatorList
 	for (const item of lineSeparatorList) {
-		const index = text.indexOf(item);
+		const index = buffer.indexOf(item);
 		if (index === -1) continue;
 
 		if (
