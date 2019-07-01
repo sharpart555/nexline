@@ -166,11 +166,11 @@ function nexline(param) {
 		if (inputType === INPUT_TYPE.STRING) {
 			// If input is string, return string at first, return null at second
 			inputStatus = INPUT_STATUS.END;
-			return input;
+			return Buffer.from(input);
 		} else if (inputType === INPUT_TYPE.BUFFER) {
 			// If input is buffer, return decoded string at first, return null at second
 			inputStatus = INPUT_STATUS.END;
-			return iconv.decode(input, encoding);
+			return input;
 		} else {
 			// If input is stream
 			let result = null;
