@@ -3,6 +3,7 @@
 [![npm](https://img.shields.io/node/v/nexline.svg)](https://www.npmjs.com/package/nexline)
 [![npm](https://img.shields.io/npm/dt/nexline.svg)](https://www.npmjs.com/package/nexline)
 [![GitHub license](https://img.shields.io/github/license/sharpart555/nexline.svg)](https://github.com/sharpart555/nexline/blob/master/LICENSE)
+[![CircleCI](https://circleci.com/gh/sharpart555/nexline.svg?style=svg)](https://circleci.com/gh/sharpart555/nexline)
 
 
 Reading stream, string, buffer line by line.\
