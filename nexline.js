@@ -185,8 +185,7 @@ function nexline(param) {
 					await prepareStream();
 				} else {
 					// Add chunkBuffer to result
-					if (result === null) result = chunkBuffer;
-					else result = Buffer.concat([result, chunkBuffer]);
+					result = commonUtil.concatBuffer(result, chunkBuffer);
 
 					// If lineSeparator is located in end of line, then load one more chunk
 					const lineInfo = commonUtil.getLineInfo(result, lineSeparatorList);
