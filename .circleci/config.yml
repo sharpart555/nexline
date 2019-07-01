@@ -4,7 +4,7 @@
 #
 version: 2
 jobs:
-  build:
+  test:
     docker:
       # specify the version you desire here
       - image: circleci/node:8
@@ -33,3 +33,9 @@ jobs:
       # run tests!
       - run: npm run test
       - run: npm run eslint
+
+workflows:
+  version: 2
+  test:
+    jobs:
+      - test
