@@ -23,6 +23,7 @@ function getLineSeparatorPosition(buffer, lineSeparatorList) {
 	const result = {
 		index: -1,
 		length: 0,
+		lineSeparator: null,
 	};
 
 	// Iterate over lineSeparatorList
@@ -37,6 +38,7 @@ function getLineSeparatorPosition(buffer, lineSeparatorList) {
 		) {
 			result.index = index;
 			result.length = item.length;
+			result.lineSeparator = item;
 		}
 	}
 
@@ -56,12 +58,14 @@ function getLineAndRest(buffer, lineSeparatorList) {
 		return {
 			line: buffer,
 			rest: null,
+			lineSeparator: null,
 		};
 	} else {
 		// If line separator found
 		return {
 			line: buffer.slice(0, position.index),
 			rest: buffer.slice(position.index + position.length),
+			lineSeparator: position.lineSeparator,
 		};
 	}
 }
