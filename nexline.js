@@ -169,17 +169,31 @@ function nexline(param) {
 			return iconv.decode(input, encoding);
 		} else {
 			// If input is stream
-			let result = null;
-			while (true) {
-				if (inputStatus === INPUT_STATUS.END) return result;
+			const result = [];
+			let lineSeparatorEOL = false;
 
+			while (true) {
+				if (inputStatus === INPUT_STATUS.END) {
+					return result.length ? result : null;
+				}
+
+				// Try to get chunkBuffer
 				const chunkBuffer = input.read();
 				if (chunkBuffer === null) {
 					await prepareStream();
 				} else {
-					const chunkText = iconv.decode(chunkBuffer, encoding);
-					result = commonUtil.concat(result, chunkText);
-					if (commonUtil.hasLineSeparator(chunkText, lineSeparatorList)) return result;
+					// Add chunkBuffer to result
+					result.push(chunkBuffer);
+
+					// If lineSeparator is located in end of line, then load one more chunk
+					const lineInfo = commonUtil.getLineSeparatorPosition(chunkBuffer, lineSeparatorList);
+					if (lineInfo.index !== -1 || lineSeparatorEOL) {
+						if (!lineSeparatorEOL && lineInfo.index + lineInfo.length === chunkBuffer.length) {
+							lineSeparatorEOL = true;
+						} else {
+							return result;
+						}
+					}
 				}
 			}
 		}
