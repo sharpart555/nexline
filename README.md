@@ -18,7 +18,7 @@ Great for execute async job over line by line in large file.
 
 ## Why I made this?
 Node.js's default readline module is great but it's `pause()` method does not work immediately.\
-I made some wrapper to fix that issue before, but it was not enough.\
+I made wrapper to fix that issue before, but it was not enough.\
 Even if `pause()` works immediately, it is still inconvenient.\
 If I want to execute async function over line by line in large file, I have to call `pause()` and `resume()` at every line.\
 I needed better way to do that without putting them all in memory.
