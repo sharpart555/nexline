@@ -35,10 +35,14 @@ function nexline(param) {
 	if (inputType === undefined) throw new Error('Invalid input. Input must be readable stream or string or buffer');
 
 	// Verify lineSeparator
-	const lineSeparatorList = Array.isArray(param2.lineSeparator) ? [...param2.lineSeparator] : [param2.lineSeparator];
-	if (lineSeparatorList.length === 0) throw new Error('Invalid lineSeparator');
-	for (const item of lineSeparatorList) {
+	const lineSeparatorStringList = Array.isArray(param2.lineSeparator) ? [...param2.lineSeparator] : [param2.lineSeparator];
+	if (lineSeparatorStringList.length === 0) throw new Error('Invalid lineSeparator');
+
+	//Convert lineSeparator to buffer
+	const lineSeparatorList = [];
+	for (const item of lineSeparatorStringList) {
 		if (typeof item !== 'string' || item.length === 0) throw new Error('Invalid lineSeparator, lineSeparator must be string and must exceed one character');
+		lineSeparatorList.push(iconv.encode(item, encoding));
 	}
 
 	// Verify encoding
