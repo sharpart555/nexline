@@ -71,13 +71,12 @@ function getLineInfo(buffer, lineSeparatorList) {
 }
 
 /**
- * Check if buffer has line separator
- * @param buffer
- * @param lineSeparatorList
+ * Make sure lineSeparator position is not changed even if more buffer appended
+ * @param lineInfo
+ * @param maxLineSeparatorLength
  */
-function hasLineSeparator(buffer, lineSeparatorList) {
-	const lineInfo = getLineSeparatorPosition(buffer, lineSeparatorList);
-	return lineInfo.index !== -1;
+function hasLineSeparatorSafe(lineInfo, maxLineSeparatorLength) {
+	return lineInfo.rest !== null && lineInfo.rest.length >= maxLineSeparatorLength;
 }
 
 /**
@@ -109,6 +108,7 @@ module.exports = {
 	getInputType,
 	getLineSeparatorPosition,
 	getLineInfo,
+	hasLineSeparatorSafe,
 	concat,
 	removeUndefined,
 };
