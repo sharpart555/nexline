@@ -40,9 +40,13 @@ function nexline(param) {
 
 	//Convert lineSeparator to buffer
 	const lineSeparatorList = [];
+	let maxLineSeparatorLength = 0;
 	for (const item of lineSeparatorStringList) {
 		if (typeof item !== 'string' || item.length === 0) throw new Error('Invalid lineSeparator, lineSeparator must be string and must exceed one character');
-		lineSeparatorList.push(iconv.encode(item, encoding));
+
+		const buffer = iconv.encode(item, encoding);
+		maxLineSeparatorLength = Math.max(maxLineSeparatorLength, buffer.length);
+		lineSeparatorList.push(buffer);
 	}
 
 	// Verify encoding
@@ -169,12 +173,10 @@ function nexline(param) {
 			return iconv.decode(input, encoding);
 		} else {
 			// If input is stream
-			const result = [];
-			let lineSeparatorEOL = false;
-
+			let result = null;
 			while (true) {
 				if (inputStatus === INPUT_STATUS.END) {
-					return result.length ? result : null;
+					return result;
 				}
 
 				// Try to get chunkBuffer
@@ -183,16 +185,13 @@ function nexline(param) {
 					await prepareStream();
 				} else {
 					// Add chunkBuffer to result
-					result.push(chunkBuffer);
+					if (result === null) result = chunkBuffer;
+					else result = Buffer.concat([result, chunkBuffer]);
 
 					// If lineSeparator is located in end of line, then load one more chunk
-					const lineInfo = commonUtil.getLineSeparatorPosition(chunkBuffer, lineSeparatorList);
-					if (lineInfo.index !== -1 || lineSeparatorEOL) {
-						if (!lineSeparatorEOL && lineInfo.index + lineInfo.length === chunkBuffer.length) {
-							lineSeparatorEOL = true;
-						} else {
-							return result;
-						}
+					const lineInfo = commonUtil.getLineInfo(result, lineSeparatorList);
+					if (commonUtil.hasLineSeparatorSafe(lineInfo, maxLineSeparatorLength)) {
+						return result;
 					}
 				}
 			}
