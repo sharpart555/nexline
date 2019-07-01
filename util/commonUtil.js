@@ -93,6 +93,20 @@ function concat(a, b) {
 }
 
 /**
+ * Concatenate buffer with special null treatment
+ * @param a
+ * @param b
+ */
+function concatBuffer(a, b) {
+	if (a === null && b === null) return null;
+
+	const bufferA = a === null ? Buffer.alloc(0) : a;
+	const bufferB = b === null ? Buffer.alloc(0) : b;
+
+	return Buffer.concat([bufferA, bufferB]);
+}
+
+/**
  * Remove undefined key in object
  * @param object
  */
@@ -110,5 +124,6 @@ module.exports = {
 	getLineInfo,
 	hasLineSeparatorSafe,
 	concat,
+	concatBuffer,
 	removeUndefined,
 };
