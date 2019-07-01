@@ -35,10 +35,18 @@ function nexline(param) {
 	if (inputType === undefined) throw new Error('Invalid input. Input must be readable stream or string or buffer');
 
 	// Verify lineSeparator
-	const lineSeparatorList = Array.isArray(param2.lineSeparator) ? [...param2.lineSeparator] : [param2.lineSeparator];
-	if (lineSeparatorList.length === 0) throw new Error('Invalid lineSeparator');
-	for (const item of lineSeparatorList) {
+	const lineSeparatorStringList = Array.isArray(param2.lineSeparator) ? [...param2.lineSeparator] : [param2.lineSeparator];
+	if (lineSeparatorStringList.length === 0) throw new Error('Invalid lineSeparator');
+
+	//Convert lineSeparator to buffer
+	const lineSeparatorList = [];
+	let maxLineSeparatorLength = 0;
+	for (const item of lineSeparatorStringList) {
 		if (typeof item !== 'string' || item.length === 0) throw new Error('Invalid lineSeparator, lineSeparator must be string and must exceed one character');
+
+		const buffer = iconv.encode(item, encoding);
+		maxLineSeparatorLength = Math.max(maxLineSeparatorLength, buffer.length);
+		lineSeparatorList.push(buffer);
 	}
 
 	// Verify encoding
@@ -51,7 +59,7 @@ function nexline(param) {
 	let inputStatus = inputType === INPUT_TYPE.STREAM ? INPUT_STATUS.BEFORE_READY : INPUT_STATUS.READY;
 	let isBusy = false;
 	let isFinished = false;
-	let bufferString = '';
+	let internalBuffer = Buffer.alloc(0);
 
 	/**
 	 * Get next line
@@ -85,11 +93,11 @@ function nexline(param) {
 		}
 
 		// If bufferString contains lineSeparator
-		if (bufferString !== null) {
-			const lineInfo = commonUtil.getLineAndRest(bufferString, lineSeparatorList);
-			if (lineInfo.rest !== null) {
-				item.resolve(lineInfo.line);
-				bufferString = lineInfo.rest;
+		if (internalBuffer !== null) {
+			const lineInfo = commonUtil.getLineInfo(internalBuffer, lineSeparatorList);
+			if (commonUtil.hasLineSeparatorSafe(lineInfo, maxLineSeparatorLength)) {
+				item.resolve(iconv.decode(lineInfo.line, encoding));
+				internalBuffer = lineInfo.rest;
 
 				// If nextQueue is not empty. continue processing
 				if (nextQueue.length) process.nextTick(processNextQueue);
@@ -99,18 +107,18 @@ function nexline(param) {
 		}
 
 		// Read more string from stream
-		const moreString = await readInput();
-
-		// Concat to bufferString
-		bufferString = commonUtil.concat(bufferString, moreString);
+		const moreBuffer = await readInput();
+		internalBuffer = commonUtil.concatBuffer(internalBuffer, moreBuffer);
 
 		// Get lineInfo
-		const lineInfo = commonUtil.getLineAndRest(bufferString, lineSeparatorList);
-		item.resolve(lineInfo.line);
-		bufferString = lineInfo.rest;
+		const lineInfo = commonUtil.getLineInfo(internalBuffer, lineSeparatorList);
+
+		// Resolve
+		item.resolve(iconv.decode(lineInfo.line, encoding));
+		internalBuffer = lineInfo.rest;
 
 		// Check finished
-		if (bufferString === null && inputStatus === INPUT_STATUS.END) isFinished = true;
+		if (internalBuffer === null && inputStatus === INPUT_STATUS.END) isFinished = true;
 
 		// If nextQueue is not empty. continue processing
 		if (nextQueue.length) process.nextTick(processNextQueue);
@@ -122,20 +130,30 @@ function nexline(param) {
 	 */
 	async function prepareStream() {
 		return new Promise((resolve, reject) => {
-			input.once('readable', () => {
+			input.once('readable', _handleReadable);
+			input.once('end', _handleEnd);
+			input.once('error', _handleError);
+
+			function _handleReadable() {
 				inputStatus = INPUT_STATUS.READY;
+				input.removeListener('end', _handleEnd);
+				input.removeListener('error', _handleError);
 				resolve(true);
-			});
+			}
 
-			input.once('end', (data) => {
+			function _handleEnd() {
 				inputStatus = INPUT_STATUS.END;
+				input.removeListener('readable', _handleReadable);
+				input.removeListener('error', _handleError);
 				resolve(false);
-			});
+			}
 
-			input.once('error', (error) => {
+			function _handleError(error) {
 				inputStatus = INPUT_STATUS.END;
+				input.removeListener('readable', _handleReadable);
+				input.removeListener('end', _handleEnd);
 				reject(error);
-			});
+			}
 		});
 	}
 
@@ -148,24 +166,32 @@ function nexline(param) {
 		if (inputType === INPUT_TYPE.STRING) {
 			// If input is string, return string at first, return null at second
 			inputStatus = INPUT_STATUS.END;
-			return input;
+			return Buffer.from(input);
 		} else if (inputType === INPUT_TYPE.BUFFER) {
 			// If input is buffer, return decoded string at first, return null at second
 			inputStatus = INPUT_STATUS.END;
-			return iconv.decode(input, encoding);
+			return input;
 		} else {
 			// If input is stream
 			let result = null;
 			while (true) {
-				if (inputStatus === INPUT_STATUS.END) return result;
+				if (inputStatus === INPUT_STATUS.END) {
+					return result;
+				}
 
+				// Try to get chunkBuffer
 				const chunkBuffer = input.read();
 				if (chunkBuffer === null) {
 					await prepareStream();
 				} else {
-					const chunkText = iconv.decode(chunkBuffer, encoding);
-					result = commonUtil.concat(result, chunkText);
-					if (commonUtil.hasLineSeparator(chunkText, lineSeparatorList)) return result;
+					// Add chunkBuffer to result
+					result = commonUtil.concatBuffer(result, chunkBuffer);
+
+					// If lineSeparator is located in end of line, then load one more chunk
+					const lineInfo = commonUtil.getLineInfo(result, lineSeparatorList);
+					if (commonUtil.hasLineSeparatorSafe(lineInfo, maxLineSeparatorLength)) {
+						return result;
+					}
 				}
 			}
 		}

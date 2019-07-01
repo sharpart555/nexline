@@ -15,19 +15,20 @@ function getInputType(input) {
 }
 
 /**
- * Get lineSeparator index
- * @param text
+ * Get lineSeparator index from buffer
+ * @param buffer
  * @param lineSeparatorList
  */
-function getLineSeparatorPosition(text, lineSeparatorList) {
+function getLineSeparatorPosition(buffer, lineSeparatorList) {
 	const result = {
 		index: -1,
 		length: 0,
+		lineSeparator: null,
 	};
 
 	// Iterate over lineSeparatorList
 	for (const item of lineSeparatorList) {
-		const index = text.indexOf(item);
+		const index = buffer.indexOf(item);
 		if (index === -1) continue;
 
 		if (
@@ -37,6 +38,7 @@ function getLineSeparatorPosition(text, lineSeparatorList) {
 		) {
 			result.index = index;
 			result.length = item.length;
+			result.lineSeparator = item;
 		}
 	}
 
@@ -44,49 +46,51 @@ function getLineSeparatorPosition(text, lineSeparatorList) {
 }
 
 /**
- * Get one line from string
- * @param text
+ * Get one line from buffer
+ * @param buffer
  * @param lineSeparatorList
  */
-function getLineAndRest(text, lineSeparatorList) {
-	const position = getLineSeparatorPosition(text, lineSeparatorList);
+function getLineInfo(buffer, lineSeparatorList) {
+	const position = getLineSeparatorPosition(buffer, lineSeparatorList);
 
 	if (position.index === -1) {
 		// If line separator not found
 		return {
-			line: text,
+			line: buffer,
 			rest: null,
+			lineSeparator: null,
 		};
 	} else {
 		// If line separator found
 		return {
-			line: text.slice(0, position.index),
-			rest: text.slice(position.index + position.length),
+			line: buffer.slice(0, position.index),
+			rest: buffer.slice(position.index + position.length),
+			lineSeparator: position.lineSeparator,
 		};
 	}
 }
 
 /**
- * Check text has line separator
- * @param text
- * @param lineSeparatorList
+ * Make sure lineSeparator position is not changed even if more buffer appended
+ * @param lineInfo
+ * @param maxLineSeparatorLength
  */
-function hasLineSeparator(text, lineSeparatorList) {
-	const lineInfo = getLineSeparatorPosition(text, lineSeparatorList);
-	return lineInfo.index !== -1;
+function hasLineSeparatorSafe(lineInfo, maxLineSeparatorLength) {
+	return lineInfo.rest !== null && lineInfo.rest.length >= maxLineSeparatorLength;
 }
 
 /**
- * Concatenate string with special null treatment
+ * Concatenate buffer with special null treatment
  * @param a
  * @param b
  */
-function concat(a, b) {
+function concatBuffer(a, b) {
 	if (a === null && b === null) return null;
 
-	const textA = a === null ? '' : a;
-	const textB = b === null ? '' : b;
-	return textA + textB;
+	const bufferA = a === null ? Buffer.alloc(0) : a;
+	const bufferB = b === null ? Buffer.alloc(0) : b;
+
+	return Buffer.concat([bufferA, bufferB]);
 }
 
 /**
@@ -104,8 +108,8 @@ function removeUndefined(object) {
 module.exports = {
 	getInputType,
 	getLineSeparatorPosition,
-	getLineAndRest,
-	hasLineSeparator,
-	concat,
+	getLineInfo,
+	hasLineSeparatorSafe,
+	concatBuffer,
 	removeUndefined,
 };
