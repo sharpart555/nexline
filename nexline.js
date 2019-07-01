@@ -136,22 +136,22 @@ function nexline(param) {
 
 			function _handleReadable() {
 				inputStatus = INPUT_STATUS.READY;
-				input.off('end', _handleEnd);
-				input.off('error', _handleError);
+				input.removeListener('end', _handleEnd);
+				input.removeListener('error', _handleError);
 				resolve(true);
 			}
 
 			function _handleEnd() {
 				inputStatus = INPUT_STATUS.END;
-				input.off('readable', _handleReadable);
-				input.off('error', _handleError);
+				input.removeListener('readable', _handleReadable);
+				input.removeListener('error', _handleError);
 				resolve(false);
 			}
 
 			function _handleError(error) {
 				inputStatus = INPUT_STATUS.END;
-				input.off('readable', _handleReadable);
-				input.off('end', _handleEnd);
+				input.removeListener('readable', _handleReadable);
+				input.removeListener('end', _handleEnd);
 				reject(error);
 			}
 		});
