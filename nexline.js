@@ -90,7 +90,7 @@ function nexline(param) {
 
 		// If bufferString contains lineSeparator
 		if (bufferString !== null) {
-			const lineInfo = commonUtil.getLineAndRest(bufferString, lineSeparatorList);
+			const lineInfo = commonUtil.getLineInfo(bufferString, lineSeparatorList);
 			if (lineInfo.rest !== null) {
 				item.resolve(lineInfo.line);
 				bufferString = lineInfo.rest;
@@ -109,7 +109,7 @@ function nexline(param) {
 		bufferString = commonUtil.concat(bufferString, moreString);
 
 		// Get lineInfo
-		const lineInfo = commonUtil.getLineAndRest(bufferString, lineSeparatorList);
+		const lineInfo = commonUtil.getLineInfo(bufferString, lineSeparatorList);
 		item.resolve(lineInfo.line);
 		bufferString = lineInfo.rest;
 

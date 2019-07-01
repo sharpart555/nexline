@@ -50,7 +50,7 @@ function getLineSeparatorPosition(buffer, lineSeparatorList) {
  * @param buffer
  * @param lineSeparatorList
  */
-function getLineAndRest(buffer, lineSeparatorList) {
+function getLineInfo(buffer, lineSeparatorList) {
 	const position = getLineSeparatorPosition(buffer, lineSeparatorList);
 
 	if (position.index === -1) {
@@ -108,8 +108,7 @@ function removeUndefined(object) {
 module.exports = {
 	getInputType,
 	getLineSeparatorPosition,
-	getLineAndRest,
-	hasLineSeparator,
+	getLineInfo,
 	concat,
 	removeUndefined,
 };
