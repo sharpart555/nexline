@@ -15,7 +15,7 @@ function getInputType(input) {
 }
 
 /**
- * Get lineSeparator index
+ * Get lineSeparator index from buffer
  * @param buffer
  * @param lineSeparatorList
  */
@@ -44,24 +44,24 @@ function getLineSeparatorPosition(buffer, lineSeparatorList) {
 }
 
 /**
- * Get one line from string
- * @param text
+ * Get one line from buffer
+ * @param buffer
  * @param lineSeparatorList
  */
-function getLineAndRest(text, lineSeparatorList) {
-	const position = getLineSeparatorPosition(text, lineSeparatorList);
+function getLineAndRest(buffer, lineSeparatorList) {
+	const position = getLineSeparatorPosition(buffer, lineSeparatorList);
 
 	if (position.index === -1) {
 		// If line separator not found
 		return {
-			line: text,
+			line: buffer,
 			rest: null,
 		};
 	} else {
 		// If line separator found
 		return {
-			line: text.slice(0, position.index),
-			rest: text.slice(position.index + position.length),
+			line: buffer.slice(0, position.index),
+			rest: buffer.slice(position.index + position.length),
 		};
 	}
 }
