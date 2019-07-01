@@ -80,19 +80,6 @@ function hasLineSeparatorSafe(lineInfo, maxLineSeparatorLength) {
 }
 
 /**
- * Concatenate string with special null treatment
- * @param a
- * @param b
- */
-function concat(a, b) {
-	if (a === null && b === null) return null;
-
-	const textA = a === null ? '' : a;
-	const textB = b === null ? '' : b;
-	return textA + textB;
-}
-
-/**
  * Concatenate buffer with special null treatment
  * @param a
  * @param b
@@ -123,7 +110,6 @@ module.exports = {
 	getLineSeparatorPosition,
 	getLineInfo,
 	hasLineSeparatorSafe,
-	concat,
 	concatBuffer,
 	removeUndefined,
 };
