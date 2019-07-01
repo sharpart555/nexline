@@ -67,12 +67,12 @@ function getLineAndRest(buffer, lineSeparatorList) {
 }
 
 /**
- * Check text has line separator
- * @param text
+ * Check if buffer has line separator
+ * @param buffer
  * @param lineSeparatorList
  */
-function hasLineSeparator(text, lineSeparatorList) {
-	const lineInfo = getLineSeparatorPosition(text, lineSeparatorList);
+function hasLineSeparator(buffer, lineSeparatorList) {
+	const lineInfo = getLineSeparatorPosition(buffer, lineSeparatorList);
 	return lineInfo.index !== -1;
 }
 
