@@ -59,7 +59,7 @@ function nexline(param) {
 	let inputStatus = inputType === INPUT_TYPE.STREAM ? INPUT_STATUS.BEFORE_READY : INPUT_STATUS.READY;
 	let isBusy = false;
 	let isFinished = false;
-	let bufferString = '';
+	let internalBuffer = Buffer.alloc(0);
 
 	/**
 	 * Get next line
@@ -93,11 +93,11 @@ function nexline(param) {
 		}
 
 		// If bufferString contains lineSeparator
-		if (bufferString !== null) {
-			const lineInfo = commonUtil.getLineInfo(bufferString, lineSeparatorList);
-			if (lineInfo.rest !== null) {
-				item.resolve(lineInfo.line);
-				bufferString = lineInfo.rest;
+		if (internalBuffer !== null) {
+			const lineInfo = commonUtil.getLineInfo(internalBuffer, lineSeparatorList);
+			if (commonUtil.hasLineSeparatorSafe(lineInfo, maxLineSeparatorLength)) {
+				item.resolve(iconv.decode(lineInfo.line, encoding));
+				internalBuffer = lineInfo.rest;
 
 				// If nextQueue is not empty. continue processing
 				if (nextQueue.length) process.nextTick(processNextQueue);
@@ -107,18 +107,18 @@ function nexline(param) {
 		}
 
 		// Read more string from stream
-		const moreString = await readInput();
-
-		// Concat to bufferString
-		bufferString = commonUtil.concat(bufferString, moreString);
+		const moreBuffer = await readInput();
+		internalBuffer = commonUtil.concatBuffer(internalBuffer, moreBuffer);
 
 		// Get lineInfo
-		const lineInfo = commonUtil.getLineInfo(bufferString, lineSeparatorList);
-		item.resolve(lineInfo.line);
-		bufferString = lineInfo.rest;
+		const lineInfo = commonUtil.getLineInfo(internalBuffer, lineSeparatorList);
+
+		// Resolve
+		item.resolve(iconv.decode(lineInfo.line, encoding));
+		internalBuffer = lineInfo.rest;
 
 		// Check finished
-		if (bufferString === null && inputStatus === INPUT_STATUS.END) isFinished = true;
+		if (internalBuffer === null && inputStatus === INPUT_STATUS.END) isFinished = true;
 
 		// If nextQueue is not empty. continue processing
 		if (nextQueue.length) process.nextTick(processNextQueue);
