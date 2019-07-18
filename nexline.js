@@ -5,6 +5,7 @@ const iconv = require('iconv-lite');
 
 const code = require('./code/code');
 const commonUtil = require('./util/commonUtil');
+const taskQueueUtil = require('./util/taskQueueUtil');
 
 /**
  * Variables
@@ -55,9 +56,8 @@ function nexline(param) {
 	/**
 	 * Variables
 	 */
-	const nextQueue = [];
+	const tq = taskQueueUtil.create();
 	let inputStatus = inputType === INPUT_TYPE.STREAM ? INPUT_STATUS.BEFORE_READY : INPUT_STATUS.READY;
-	let isBusy = false;
 	let isFinished = false;
 	let internalBuffer = Buffer.alloc(0);
 
@@ -65,64 +65,39 @@ function nexline(param) {
 	 * Get next line
 	 */
 	async function next() {
-		return new Promise((resolve, reject) => {
-			nextQueue.push({ resolve, reject });
-			if (!isBusy) processNextQueue();
-		});
-	}
-
-	/**
-	 * Process nextQueue
-	 */
-	async function processNextQueue() {
-		// Set isBusy flag
-		isBusy = true;
-
-		// Get nextQueue item
-		const item = nextQueue.shift();
-
-		// If finished, always return null
-		if (isFinished) {
-			item.resolve(null);
-			return;
-		}
-
-		// Prepare stream
-		if (inputType === INPUT_TYPE.STREAM && inputStatus === INPUT_STATUS.BEFORE_READY) {
-			await prepareStream();
-		}
-
-		// If bufferString contains lineSeparator
-		if (internalBuffer !== null) {
-			const lineInfo = commonUtil.getLineInfo(internalBuffer, lineSeparatorList);
-			if (commonUtil.hasLineSeparatorSafe(lineInfo, maxLineSeparatorLength)) {
-				item.resolve(iconv.decode(lineInfo.line, encoding));
-				internalBuffer = lineInfo.rest;
-
-				// If nextQueue is not empty. continue processing
-				if (nextQueue.length) process.nextTick(processNextQueue);
-				else isBusy = false;
-				return;
+		return tq.exec(async () => {
+			// If finished, always return null
+			if (isFinished) {
+				return null;
 			}
-		}
 
-		// Read more string from stream
-		const moreBuffer = await readInput();
-		internalBuffer = commonUtil.concatBuffer(internalBuffer, moreBuffer);
+			// Prepare stream
+			if (inputType === INPUT_TYPE.STREAM && inputStatus === INPUT_STATUS.BEFORE_READY) {
+				await prepareStream();
+			}
 
-		// Get lineInfo
-		const lineInfo = commonUtil.getLineInfo(internalBuffer, lineSeparatorList);
+			// If bufferString contains lineSeparator
+			if (internalBuffer !== null) {
+				const lineInfo = commonUtil.getLineInfo(internalBuffer, lineSeparatorList);
+				if (commonUtil.hasLineSeparatorSafe(lineInfo, maxLineSeparatorLength)) {
+					internalBuffer = lineInfo.rest;
+					return iconv.decode(lineInfo.line, encoding);
+				}
+			}
 
-		// Resolve
-		item.resolve(iconv.decode(lineInfo.line, encoding));
-		internalBuffer = lineInfo.rest;
+			// Read more string from stream
+			const moreBuffer = await readInput();
+			internalBuffer = commonUtil.concatBuffer(internalBuffer, moreBuffer);
 
-		// Check finished
-		if (internalBuffer === null && inputStatus === INPUT_STATUS.END) isFinished = true;
+			// Get lineInfo
+			const lineInfo = commonUtil.getLineInfo(internalBuffer, lineSeparatorList);
 
-		// If nextQueue is not empty. continue processing
-		if (nextQueue.length) process.nextTick(processNextQueue);
-		else isBusy = false;
+			// Check finished
+			internalBuffer = lineInfo.rest;
+			if (internalBuffer === null && inputStatus === INPUT_STATUS.END) isFinished = true;
+
+			return iconv.decode(lineInfo.line, encoding);
+		});
 	}
 
 	/**
