@@ -147,7 +147,7 @@ describe('Nexline test', async () => {
 
 		assert.throws(() => {
 			nexline({
-				input: 123,
+				input: undefined,
 			});
 		});
 
