@@ -4,6 +4,7 @@
 const iconv = require('iconv-lite');
 
 const code = require('./code/code');
+const reader = require('./reader');
 const commonUtil = require('./util/commonUtil');
 const taskQueueUtil = require('./util/taskQueueUtil');
 
@@ -65,6 +66,8 @@ function nexline(param) {
 	let isFinished = false;
 	let internalBuffer = Buffer.alloc(0);
 
+	const inputReader = reader.create(input);
+
 	/**
 	 * Get next line
 	 */
@@ -73,11 +76,6 @@ function nexline(param) {
 			// If finished, always return null
 			if (isFinished) {
 				return null;
-			}
-
-			// Prepare stream
-			if (inputType === INPUT_TYPE.STREAM && inputStatus === INPUT_STATUS.BEFORE_READY) {
-				await prepareStream();
 			}
 
 			// If bufferString contains lineSeparator
@@ -105,39 +103,7 @@ function nexline(param) {
 	}
 
 	/**
-	 * Prepare stream ready to read
-	 */
-	async function prepareStream() {
-		return new Promise((resolve, reject) => {
-			input.once('readable', _handleReadable);
-			input.once('end', _handleEnd);
-			input.once('error', _handleError);
-
-			function _handleReadable() {
-				inputStatus = INPUT_STATUS.READY;
-				input.removeListener('end', _handleEnd);
-				input.removeListener('error', _handleError);
-				resolve(true);
-			}
-
-			function _handleEnd() {
-				inputStatus = INPUT_STATUS.END;
-				input.removeListener('readable', _handleReadable);
-				input.removeListener('error', _handleError);
-				resolve(false);
-			}
-
-			function _handleError(error) {
-				inputStatus = INPUT_STATUS.END;
-				input.removeListener('readable', _handleReadable);
-				input.removeListener('end', _handleEnd);
-				reject(error);
-			}
-		});
-	}
-
-	/**
-	 * Read data from input
+	 * Read data from input until line separator is found or end of input reached
 	 */
 	async function readInput() {
 		if (inputStatus === INPUT_STATUS.END) return null;
@@ -159,9 +125,9 @@ function nexline(param) {
 				}
 
 				// Try to get chunkBuffer
-				const chunkBuffer = input.read();
+				const chunkBuffer = await inputReader.read();
 				if (chunkBuffer === null) {
-					await prepareStream();
+					inputStatus = INPUT_STATUS.END;
 				} else {
 					// Add chunkBuffer to result
 					result = commonUtil.concatBuffer(result, chunkBuffer);
