@@ -1,10 +1,8 @@
 /**
  * Stream Reader
- * @param param
- * @param param.input
+ * @param input
  */
-function create(param) {
-	const rStream = param.input;
+function create(input) {
 	let isFinished = false;
 
 	/**
@@ -12,25 +10,25 @@ function create(param) {
 	 */
 	async function prepareStream() {
 		return new Promise((resolve, reject) => {
-			rStream.once('readable', _handleReadable);
-			rStream.once('end', _handleEnd);
-			rStream.once('error', _handleError);
+			input.once('readable', _handleReadable);
+			input.once('end', _handleEnd);
+			input.once('error', _handleError);
 
 			function _handleReadable() {
-				rStream.removeListener('end', _handleEnd);
-				rStream.removeListener('error', _handleError);
+				input.removeListener('end', _handleEnd);
+				input.removeListener('error', _handleError);
 				resolve(true);
 			}
 
 			function _handleEnd() {
-				rStream.removeListener('readable', _handleReadable);
-				rStream.removeListener('error', _handleError);
+				input.removeListener('readable', _handleReadable);
+				input.removeListener('error', _handleError);
 				resolve(false);
 			}
 
 			function _handleError(error) {
-				rStream.removeListener('readable', _handleReadable);
-				rStream.removeListener('end', _handleEnd);
+				input.removeListener('readable', _handleReadable);
+				input.removeListener('end', _handleEnd);
 				reject(error);
 			}
 		});
@@ -42,7 +40,7 @@ function create(param) {
 	async function read() {
 		if (isFinished) return null;
 
-		const readBuffer = rStream.read();
+		const readBuffer = input.read();
 		if (readBuffer === null) {
 			const prepareStatus = await prepareStream();
 			if (prepareStatus === false) isFinished = true;
