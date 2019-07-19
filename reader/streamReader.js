@@ -46,11 +46,10 @@ function create(param) {
 		if (readBuffer === null) {
 			const prepareStatus = await prepareStream();
 			if (prepareStatus === false) isFinished = true;
-
 			return read();
+		} else {
+			return readBuffer;
 		}
-
-		return readBuffer;
 	}
 
 	return {
