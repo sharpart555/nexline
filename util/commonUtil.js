@@ -12,6 +12,7 @@ function getInputType(input) {
 	if (typeof input === 'string') return INPUT_TYPE.STRING;
 	else if (input instanceof stream.Readable) return INPUT_TYPE.STREAM;
 	else if (Buffer.isBuffer(input)) return INPUT_TYPE.BUFFER;
+	else if (typeof input === 'number') return INPUT_TYPE.FILE_DESCRIPTOR;
 }
 
 /**
@@ -112,4 +113,5 @@ module.exports = {
 	hasLineSeparatorSafe,
 	concatBuffer,
 	removeUndefined,
+	findIndexFromBuffer,
 };
