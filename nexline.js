@@ -25,13 +25,14 @@ function nexline(param) {
 	const param2 = {
 		lineSeparator: ['\n', '\r\n'],
 		encoding: 'utf8',
+		reverse: false,
 		...param,
 	};
 
 	/**
 	 * Verify parameters
 	 */
-	const { input, encoding } = param2;
+	const { input, encoding, reverse } = param2;
 
 	// Verify input
 	const inputType = commonUtil.getInputType(input);
@@ -56,7 +57,7 @@ function nexline(param) {
 	if (!iconv.encodingExists(encoding)) throw new Error('Invalid encoding. Check encodings supported by iconv-lite');
 
 	// Verify option
-	if (param2.reverse && inputType === INPUT_TYPE.STREAM) throw new Error('Stream cannot be read reversely');
+	if (reverse && inputType === INPUT_TYPE.STREAM) throw new Error('Stream cannot be read reversely');
 
 	/**
 	 * Variables
@@ -76,49 +77,28 @@ function nexline(param) {
 				return null;
 			}
 
-			// If bufferString contains lineSeparator
+			// Scan readBufferList
 			if (readBufferList.length) {
-				// Find line separator
-				const indexInfo = commonUtil.findIndexFromBuffer({
-					bufferList: readBufferList,
-					needleList: lineSeparatorList,
-				});
+				// Parse line
+				const lineInfo = commonUtil.parseLine({ bufferList: readBufferList, lineSeparatorList, reverse });
 
-				if (indexInfo.index !== -1) {
-					// Get one line
-					const lineInfo = commonUtil.splitBufferList({
-						bufferList: readBufferList,
-						indexInfo,
-					});
-
-					readBufferList = lineInfo.after;
-					return iconv.decode(Buffer.concat(lineInfo.before), encoding);
+				// Check if bufferString contains line separator
+				if (lineInfo.rest.length) {
+					readBufferList = lineInfo.rest;
+					return iconv.decode(Buffer.concat(lineInfo.line), encoding);
 				}
 			}
 
 			// Read data from input until line separator is found or end of input reached
 			await readInput();
 
-			// Find line separator
-			const indexInfo = commonUtil.findIndexFromBuffer({
-				bufferList: readBufferList,
-				needleList: lineSeparatorList,
-			});
+			// Parse line
+			const lineInfo = commonUtil.parseLine({ bufferList: readBufferList, lineSeparatorList, reverse });
 
-			// Get one line
-			const lineInfo = commonUtil.splitBufferList({
-				bufferList: readBufferList,
-				indexInfo,
-			});
+			if (lineInfo.rest.length === 0) isFinished = true;
 
-			// If line separator exists, add zero size buffer
-			readBufferList = lineInfo.after;
-			if (readBufferList.length === 0) {
-				if (indexInfo.index !== -1) readBufferList.push(Buffer.alloc(0));
-				else isFinished = true;
-			}
-
-			return iconv.decode(Buffer.concat(lineInfo.before), encoding);
+			readBufferList = lineInfo.rest;
+			return iconv.decode(Buffer.concat(lineInfo.line), encoding);
 		});
 	}
 
@@ -133,13 +113,15 @@ function nexline(param) {
 				return;
 			} else {
 				// Add chunkBuffer to result
-				readBufferList.push(readBuffer);
+				if (reverse) readBufferList.unshift(readBuffer);
+				else readBufferList.push(readBuffer);
 
 				// If partial lineSeparator is found, load more buffer
 				const indexInfo = commonUtil.findIndexFromBuffer({
 					bufferList: readBufferList,
 					needleList: lineSeparatorList,
 					partial: true,
+					reverse,
 				});
 
 				if (indexInfo.partial === false) return;
