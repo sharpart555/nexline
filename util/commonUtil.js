@@ -126,12 +126,12 @@ function findIndexFromBuffer(param) {
 	const result = { index: -1, size: 0, partial: false };
 
 	// Iterate over needleList
-	for (const needle of param2.needleList) {
+	for (const needle of needleList) {
 		const indexInfo = _findOne({ bufferList, needle, reverse, partial });
 
 		if (
 			result.index === -1 || //
-			result.index > indexInfo.index ||
+			(result.index > indexInfo.index && indexInfo.index !== -1) ||
 			(result.index === indexInfo.index && result.size < indexInfo.size)
 		) {
 			result.index = indexInfo.index;
