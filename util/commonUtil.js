@@ -159,9 +159,45 @@ function splitBufferList(param) {
 	return result;
 }
 
+/**
+ * Split bufferList to line and Rest
+ * @param param
+ * @param param.bufferList
+ * @param param.lineSeparatorList
+ * @param [param.reverse]
+ */
+function parseLine(param) {
+	const { bufferList, lineSeparatorList, reverse } = param;
+
+	// Find line separator
+	const indexInfo = findIndexFromBuffer({
+		bufferList,
+		needleList: lineSeparatorList,
+		reverse,
+	});
+
+	// If line separator not found
+	if (indexInfo.index === -1) return { line: bufferList, rest: [] };
+
+	// Get one line
+	const splitedBuffer = splitBufferList({
+		bufferList,
+		indexInfo,
+	});
+
+	// Get result
+	const result = reverse ? { line: splitedBuffer.after, rest: splitedBuffer.before } : { line: splitedBuffer.before, rest: splitedBuffer.after };
+
+	// If line separator found and result.rest is empty, put zero size buffer to result.rest
+	if (result.rest.length === 0) result.rest.push(Buffer.alloc(0));
+
+	return result;
+}
+
 module.exports = {
 	getInputType,
 	removeUndefined,
 	findIndexFromBuffer,
 	splitBufferList,
+	parseLine,
 };
