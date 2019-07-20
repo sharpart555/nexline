@@ -145,6 +145,10 @@ function findIndexFromBuffer(param) {
 	/**
 	 * Find index for one needle
 	 * @param param
+	 * @param param.bufferList
+	 * @param param.needle
+	 * @param [param.reverse]
+	 * @param [param.partial]
 	 * @private
 	 */
 	function _findOne(param) {
