@@ -1,4 +1,9 @@
 /**
+ * Variable
+ */
+const READ_TIMEOUT = 15000;
+
+/**
  * Stream Reader
  * @param input
  */
@@ -13,6 +18,14 @@ function create(input) {
 			input.once('readable', _handleReadable);
 			input.once('end', _handleEnd);
 			input.once('error', _handleError);
+
+			// If it takes too long...
+			setTimeout(() => {
+				input.removeListener('readable', _handleReadable);
+				input.removeListener('end', _handleEnd);
+				input.removeListener('error', _handleError);
+				reject(new Error('Stream read timeout!'));
+			}, READ_TIMEOUT);
 
 			function _handleReadable() {
 				input.removeListener('end', _handleEnd);
