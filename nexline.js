@@ -62,11 +62,9 @@ function nexline(param) {
 	 * Variables
 	 */
 	const tq = taskQueueUtil.create();
-	let inputStatus = inputType === INPUT_TYPE.STREAM ? INPUT_STATUS.BEFORE_READY : INPUT_STATUS.READY;
-	let isFinished = false;
-	let internalBuffer = Buffer.alloc(0);
-
 	const inputReader = reader.create(input);
+	let isFinished = false;
+	let readBufferList = [];
 
 	/**
 	 * Get next line
@@ -79,26 +77,48 @@ function nexline(param) {
 			}
 
 			// If bufferString contains lineSeparator
-			if (internalBuffer !== null) {
-				const lineInfo = commonUtil.getLineInfo(internalBuffer, lineSeparatorList);
-				if (commonUtil.hasLineSeparatorSafe(lineInfo, maxLineSeparatorLength)) {
-					internalBuffer = lineInfo.rest;
-					return iconv.decode(lineInfo.line, encoding);
+			if (readBufferList.length) {
+				// Find line separator
+				const indexInfo = commonUtil.findIndexFromBuffer({
+					bufferList: readBufferList,
+					needleList: lineSeparatorList,
+				});
+
+				if (indexInfo.index !== -1) {
+					// Get one line
+					const lineInfo = commonUtil.splitBufferList({
+						bufferList: readBufferList,
+						indexInfo,
+					});
+
+					readBufferList = lineInfo.after;
+					return iconv.decode(Buffer.concat(lineInfo.before), encoding);
 				}
 			}
 
-			// Read more string from stream
-			const moreBuffer = await readInput();
-			internalBuffer = commonUtil.concatBuffer(internalBuffer, moreBuffer);
+			// Read data from input until line separator is found or end of input reached
+			await readInput();
 
-			// Get lineInfo
-			const lineInfo = commonUtil.getLineInfo(internalBuffer, lineSeparatorList);
+			// Find line separator
+			const indexInfo = commonUtil.findIndexFromBuffer({
+				bufferList: readBufferList,
+				needleList: lineSeparatorList,
+			});
 
-			// Check finished
-			internalBuffer = lineInfo.rest;
-			if (internalBuffer === null && inputStatus === INPUT_STATUS.END) isFinished = true;
+			// Get one line
+			const lineInfo = commonUtil.splitBufferList({
+				bufferList: readBufferList,
+				indexInfo,
+			});
 
-			return iconv.decode(lineInfo.line, encoding);
+			// If line separator exists, add zero size buffer
+			readBufferList = lineInfo.after;
+			if (readBufferList.length === 0) {
+				if (indexInfo.index !== -1) readBufferList.push(Buffer.alloc(0));
+				else isFinished = true;
+			}
+
+			return iconv.decode(Buffer.concat(lineInfo.before), encoding);
 		});
 	}
 
@@ -106,38 +126,23 @@ function nexline(param) {
 	 * Read data from input until line separator is found or end of input reached
 	 */
 	async function readInput() {
-		if (inputStatus === INPUT_STATUS.END) return null;
+		while (true) {
+			// Try to get chunkBuffer
+			const readBuffer = await inputReader.read();
+			if (readBuffer === null) {
+				return;
+			} else {
+				// Add chunkBuffer to result
+				readBufferList.push(readBuffer);
 
-		if (inputType === INPUT_TYPE.STRING) {
-			// If input is string, return string at first, return null at second
-			inputStatus = INPUT_STATUS.END;
-			return Buffer.from(input);
-		} else if (inputType === INPUT_TYPE.BUFFER) {
-			// If input is buffer, return decoded string at first, return null at second
-			inputStatus = INPUT_STATUS.END;
-			return input;
-		} else {
-			// If input is stream
-			let result = null;
-			while (true) {
-				if (inputStatus === INPUT_STATUS.END) {
-					return result;
-				}
+				// If partial lineSeparator is found, load more buffer
+				const indexInfo = commonUtil.findIndexFromBuffer({
+					bufferList: readBufferList,
+					needleList: lineSeparatorList,
+					partial: true,
+				});
 
-				// Try to get chunkBuffer
-				const chunkBuffer = await inputReader.read();
-				if (chunkBuffer === null) {
-					inputStatus = INPUT_STATUS.END;
-				} else {
-					// Add chunkBuffer to result
-					result = commonUtil.concatBuffer(result, chunkBuffer);
-
-					// If lineSeparator is located in end of line, then load one more chunk
-					const lineInfo = commonUtil.getLineInfo(result, lineSeparatorList);
-					if (commonUtil.hasLineSeparatorSafe(lineInfo, maxLineSeparatorLength)) {
-						return result;
-					}
-				}
+				if (indexInfo.partial === false) return;
 			}
 		}
 	}
