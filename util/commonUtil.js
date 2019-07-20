@@ -16,85 +16,6 @@ function getInputType(input) {
 }
 
 /**
- * Get lineSeparator index from buffer
- * @param buffer
- * @param lineSeparatorList
- */
-function getLineSeparatorPosition(buffer, lineSeparatorList) {
-	const result = {
-		index: -1,
-		length: 0,
-		lineSeparator: null,
-	};
-
-	// Iterate over lineSeparatorList
-	for (const item of lineSeparatorList) {
-		const index = buffer.indexOf(item);
-		if (index === -1) continue;
-
-		if (
-			result.index === -1 || //
-			index < result.index ||
-			(index === result.index && item.length > result.length)
-		) {
-			result.index = index;
-			result.length = item.length;
-			result.lineSeparator = item;
-		}
-	}
-
-	return result;
-}
-
-/**
- * Get one line from buffer
- * @param buffer
- * @param lineSeparatorList
- */
-function getLineInfo(buffer, lineSeparatorList) {
-	const position = getLineSeparatorPosition(buffer, lineSeparatorList);
-
-	if (position.index === -1) {
-		// If line separator not found
-		return {
-			line: buffer,
-			rest: null,
-			lineSeparator: null,
-		};
-	} else {
-		// If line separator found
-		return {
-			line: buffer.slice(0, position.index),
-			rest: buffer.slice(position.index + position.length),
-			lineSeparator: position.lineSeparator,
-		};
-	}
-}
-
-/**
- * Make sure lineSeparator position is not changed even if more buffer appended
- * @param lineInfo
- * @param maxLineSeparatorLength
- */
-function hasLineSeparatorSafe(lineInfo, maxLineSeparatorLength) {
-	return lineInfo.rest !== null && lineInfo.rest.length >= maxLineSeparatorLength;
-}
-
-/**
- * Concatenate buffer with special null treatment
- * @param a
- * @param b
- */
-function concatBuffer(a, b) {
-	if (a === null && b === null) return null;
-
-	const bufferA = a === null ? Buffer.alloc(0) : a;
-	const bufferB = b === null ? Buffer.alloc(0) : b;
-
-	return Buffer.concat([bufferA, bufferB]);
-}
-
-/**
  * Remove undefined key in object
  * @param object
  */
@@ -240,10 +161,6 @@ function splitBufferList(param) {
 
 module.exports = {
 	getInputType,
-	getLineSeparatorPosition,
-	getLineInfo,
-	hasLineSeparatorSafe,
-	concatBuffer,
 	removeUndefined,
 	findIndexFromBuffer,
 	splitBufferList,
