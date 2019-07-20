@@ -201,6 +201,10 @@ function splitBufferList(param) {
 	const { bufferList, indexInfo } = param;
 	const result = { before: [], after: [] };
 
+	if (indexInfo.index === -1) {
+		return { before: bufferList, after: [] };
+	}
+
 	// Iterate over bufferList
 	let baseIndex = 0;
 	for (const buffer of bufferList) {
