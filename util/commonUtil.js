@@ -187,6 +187,49 @@ function findIndexFromBuffer(param) {
 	}
 }
 
+/**
+ * Split bufferList using indexInfo
+ * @param param
+ * @param param.bufferList
+ * @param param.indexInfo
+ */
+function splitBufferList(param) {
+	const { bufferList, indexInfo } = param;
+	const result = { before: [], after: [] };
+
+	// Iterate over bufferList
+	let baseIndex = 0;
+	for (const buffer of bufferList) {
+		if (baseIndex + buffer.length <= indexInfo.index) {
+			result.before.push(buffer);
+		} else if (baseIndex >= indexInfo.index + indexInfo.size) {
+			result.after.push(buffer);
+		} else {
+			const beforeBufferStart = 0;
+			const beforeBufferEnd = indexInfo.index - baseIndex;
+			const beforeBufferSize = beforeBufferEnd - beforeBufferStart;
+			if (beforeBufferSize > 0) {
+				const beforeBuffer = Buffer.allocUnsafe(beforeBufferSize);
+				buffer.copy(beforeBuffer, 0, beforeBufferStart, beforeBufferEnd);
+				result.before.push(beforeBuffer);
+			}
+
+			const afterBufferStart = indexInfo.index + indexInfo.size - baseIndex;
+			const afterBufferEnd = buffer.length;
+			const afterBufferSize = afterBufferEnd - afterBufferStart;
+			if (afterBufferSize > 0) {
+				const afterBuffer = Buffer.allocUnsafe(afterBufferSize);
+				buffer.copy(afterBuffer, 0, afterBufferStart, afterBufferEnd);
+				result.after.push(afterBuffer);
+			}
+		}
+
+		baseIndex += buffer.length;
+	}
+
+	return result;
+}
+
 module.exports = {
 	getInputType,
 	getLineSeparatorPosition,
@@ -195,4 +238,5 @@ module.exports = {
 	concatBuffer,
 	removeUndefined,
 	findIndexFromBuffer,
+	splitBufferList,
 };
