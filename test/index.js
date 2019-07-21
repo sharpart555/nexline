@@ -160,5 +160,12 @@ describe('Nexline test', async () => {
 				encoding: 'notSupportedEncoding',
 			});
 		});
+
+		assert.throws(() => {
+			nexline({
+				input: fs.createReadStream(path.resolve(__dirname, './data/simple.txt')),
+				reverse: true
+			});
+		});
 	});
 });
