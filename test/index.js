@@ -9,11 +9,7 @@ describe('Nexline test', async () => {
 			input: fs.createReadStream(path.resolve(__dirname, './data/simple.txt')),
 		});
 
-		assert.strictEqual('Test Line 1', await nl.next());
-		assert.strictEqual('Test Line 2', await nl.next());
-		assert.strictEqual('Test Line 3', await nl.next());
-		assert.strictEqual('Test Line 4', await nl.next());
-		assert.strictEqual('Test Line 5', await nl.next());
+		for (let i = 1; i <= 5; i++) assert.strictEqual(`Test Line ${i}`, await nl.next());
 		assert.strictEqual(null, await nl.next());
 	});
 
