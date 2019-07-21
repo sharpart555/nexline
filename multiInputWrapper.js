@@ -7,9 +7,10 @@ const commonUtil = require('./util/commonUtil');
 /**
  * Nexline wrapper for supporting multiple inputs
  * @param param
- * @param param.input
+ * @param param.input string, buffer, readable stream, file descriptor
  * @param [param.lineSeparator]
- * @param [param.encoding]
+ * @param [param.encoding] input stream encoding using iconv-lite
+ * @param [param.reverse] starting from last line
  */
 function multiInputWrapper(param) {
 	// Verify input
