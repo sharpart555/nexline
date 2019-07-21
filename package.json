@@ -1,6 +1,6 @@
 {
   "name": "nexline",
-  "version": "1.0.1",
+  "version": "1.0.2",
   "description": "Read file, stream, string, buffer line by line. Great for execute async job over line by line in large file without putting them all in memory.",
   "author": "Youngho Jin",
   "license": "MIT",
