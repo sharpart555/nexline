@@ -22,9 +22,8 @@ function multiInputWrapper(param) {
 		nlList.push(
 			nexline(
 				commonUtil.removeUndefined({
+					...param,
 					input: item,
-					lineSeparator: param.lineSeparator,
-					encoding: param.encoding,
 				})
 			)
 		);
