@@ -2,6 +2,7 @@
  * Import
  */
 const iconv = require('iconv-lite');
+const fs = require('fs-extra');
 
 const code = require('./code/code');
 const reader = require('./reader');
@@ -20,26 +21,28 @@ const { INPUT_STATUS, INPUT_TYPE } = code;
  * @param [param.lineSeparator]
  * @param [param.encoding] input stream encoding using iconv-lite
  * @param [param.reverse] starting from last line
+ * @param [param.autoCloseFile] close file descriptor automatically
  */
 function nexline(param) {
 	const param2 = {
 		lineSeparator: '\n',
 		encoding: 'utf8',
 		reverse: false,
+		autoCloseFile: false,
 		...param,
 	};
 
 	/**
 	 * Verify parameters
 	 */
-	const { input, encoding, reverse } = param2;
+	const { input, encoding, reverse, autoCloseFile } = param2;
 
 	// Verify input
 	const inputType = commonUtil.getInputType(input);
 	if (inputType === undefined) throw new Error('Invalid input. Input must be one of these: string, buffer, readable stream, file descriptor');
 
 	// Verify lineSeparator
-	const lineSeparatorStringList = Array.isArray(param2.lineSeparator) ? [...param2.lineSeparator] : [param2.lineSeparator];
+	const lineSeparatorStringList = commonUtil.toArray(param2.lineSeparator);
 	if (lineSeparatorStringList.length === 0) throw new Error('Invalid lineSeparator');
 
 	//Convert lineSeparator to buffer
@@ -96,7 +99,10 @@ function nexline(param) {
 
 			// Parse line
 			const lineInfo = commonUtil.parseLine({ bufferList: readBufferList, lineSeparatorList, reverse });
-			if (lineInfo.rest.length === 0) isFinished = true;
+			if (lineInfo.rest.length === 0) {
+				isFinished = true;
+				if (autoCloseFile && inputType === INPUT_TYPE.FILE_DESCRIPTOR) fs.close(input);
+			}
 
 			readBufferList = lineInfo.rest;
 

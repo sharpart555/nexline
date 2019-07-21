@@ -6,8 +6,8 @@
 [![CircleCI](https://circleci.com/gh/sharpart555/nexline.svg?style=svg)](https://circleci.com/gh/sharpart555/nexline)
 
 
-Reading file, string, buffer line by line.\
-Great for execute async job over line by line in large file.
+Read file, stream, string, buffer line by line.\
+Great for execute async job over line by line in large file without putting them all in memory.
 
 * Lightweight
 * Handle large file with small memory footprint
@@ -25,11 +25,12 @@ If I want to execute async function over line by line in large file, I have to c
 I needed better way to do that without putting them all in memory.
 
 ## Breaking changes in 1.0.0
+* Change line separator default value from `['\n', '\r\n']` to `'\n'` for better performance
+  * If you want to support both CRLF and LF, set `lineSeparator: ['\n', '\r\n']`
 * Support reverse mode.
 * Support file descriptor as input
-* Change line separator default value from `['\n', '\r\n']` to `'\n'` for performance
-  * Still support both CRLF and LF, just set `lineSeparator: ['\n', '\r\n']`
-* Optimize performance and memory usage
+* Improve performance
+* Optimize memory usage
 
 ## Install with npm
 Required Node.js version >= 8.0.0.
@@ -44,8 +45,10 @@ const nexline = require('nexline');
 const fs = require('fs');
 
 async function main () {
+  const fd = fs.openSync(path_to_file, 'r');
+  
   const nl = nexline({
-    input: fs.openSync(path_to_file, 'r'), // input can be file, stream, string and buffer 
+    input: fd, // input can be file, stream, string and buffer
   });
   
   while(true) {
@@ -53,6 +56,8 @@ async function main () {
     console.log(line);
     if (line === null) break; // If all data is read, returns null
   }
+  
+  fs.closeSync(fd); // You can use `autoCloseFile: true` to close file descriptor automatically
 }
 
 ```
@@ -134,6 +139,7 @@ const nl = nexline({
 | lineSeparator | '\n'                         | Any string more than one character. You can provide multiple line separator using array |
 | encoding      | 'utf8'                      | [See encodings supported by iconv-lite](https://github.com/ashtuchkin/iconv-lite/wiki/Supported-Encodings) |
 | reverse       | false                       | Reverse mode, **Cannot use this option with stream input** because stream cannot be read from end |
+| autoCloseFile | false                       | Automatically close file descriptor after all data is read |
 
 ## Contribution
 Pull requests and stars are always welcome. For bugs and feature requests, [please create an issue](https://github.com/sharpart555/nexline/issues/new)

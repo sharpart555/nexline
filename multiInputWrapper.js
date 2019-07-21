@@ -7,13 +7,15 @@ const commonUtil = require('./util/commonUtil');
 /**
  * Nexline wrapper for supporting multiple inputs
  * @param param
- * @param param.input
+ * @param param.input string, buffer, readable stream, file descriptor
  * @param [param.lineSeparator]
- * @param [param.encoding]
+ * @param [param.encoding] input stream encoding using iconv-lite
+ * @param [param.reverse] starting from last line
+ * @param [param.autoCloseFile] close file descriptor automatically
  */
 function multiInputWrapper(param) {
 	// Verify input
-	const inputList = Array.isArray(param.input) ? [...param.input] : [param.input];
+	const inputList = commonUtil.toArray(param.input);
 	if (inputList.length === 0) throw new Error('Invalid input');
 
 	// Create nexlines for each input

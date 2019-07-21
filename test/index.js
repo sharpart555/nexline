@@ -52,29 +52,31 @@ describe('Nexline test', async () => {
 
 	it('Stream input test', async () => {
 		const nl = nexline({
-			input: fs.createReadStream(path.resolve(__dirname, './data/simple.txt')),
+			input: fs.createReadStream(path.resolve(__dirname, './data/large.txt')),
 		});
 
-		for (let i = 1; i <= 5; i++) assert.strictEqual(`Test Line ${i}`, await nl.next());
+		for (let i = 1; i <= 2000; i++) assert.strictEqual(true, (await nl.next()).startsWith(`Line ${i},`));
 		assert.strictEqual(null, await nl.next());
 	});
 
 	it('File input test', async () => {
 		const nl = nexline({
-			input: await fs.open(path.resolve(__dirname, './data/simple.txt'), 'r'),
+			input: await fs.open(path.resolve(__dirname, './data/large.txt'), 'r'),
+			autoCloseFile: true,
 		});
 
-		for (let i = 1; i <= 5; i++) assert.strictEqual(`Test Line ${i}`, await nl.next());
+		for (let i = 1; i <= 2000; i++) assert.strictEqual(true, (await nl.next()).startsWith(`Line ${i},`));
 		assert.strictEqual(null, await nl.next());
 	});
 
 	it('File input reverse test', async () => {
 		const nl = nexline({
-			input: await fs.open(path.resolve(__dirname, './data/simple.txt'), 'r'),
+			input: await fs.open(path.resolve(__dirname, './data/large.txt'), 'r'),
 			reverse: true,
+			autoCloseFile: true,
 		});
 
-		for (let i = 5; i >= 1; i--) assert.strictEqual(`Test Line ${i}`, await nl.next());
+		for (let i = 2000; i >= 1; i--) assert.strictEqual(true, (await nl.next()).startsWith(`Line ${i},`));
 		assert.strictEqual(null, await nl.next());
 	});
 

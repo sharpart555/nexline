@@ -1,7 +1,7 @@
 {
   "name": "nexline",
-  "version": "1.0.0",
-  "description": "Reading stream, string, buffer line by line. Great for execute async job over line by line in large file without putting them all in memory.",
+  "version": "1.0.1",
+  "description": "Read file, stream, string, buffer line by line. Great for execute async job over line by line in large file without putting them all in memory.",
   "author": "Youngho Jin",
   "license": "MIT",
   "homepage": "https://github.com/sharpart555/nexline",
@@ -14,15 +14,19 @@
   },
   "keywords": [
     "nexline",
+    "readline",
+    "next",
+    "line",
     "nextline",
     "next-line",
     "line-next",
     "linebyline",
-    "line",
-    "readline",
     "stream",
     "string",
-    "buffer"
+    "buffer",
+    "file",
+    "read",
+    "reverse"
   ],
   "main": "index.js",
   "scripts": {
@@ -37,10 +41,10 @@
     "iconv-lite": "^0.5.0"
   },
   "devDependencies": {
-    "eslint": "^6.0.1",
+    "eslint": "^6.1.0",
     "eslint-config-prettier": "^6.0.0",
     "eslint-plugin-prettier": "^3.1.0",
-    "mocha": "^6.1.4",
+    "mocha": "^6.2.0",
     "prettier": "^1.18.2",
     "prettier-eslint": "^9.0.0"
   }
