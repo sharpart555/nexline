@@ -95,26 +95,32 @@ function nexline(param) {
 			}
 
 			// Read data from input until line separator is found or end of input reached
-			await readInput();
+			await _readInput();
 
 			// Parse line
 			const lineInfo = commonUtil.parseLine({ bufferList: readBufferList, lineSeparatorList, reverse });
-			if (lineInfo.rest.length === 0) {
-				isFinished = true;
-				if (autoCloseFile && inputType === INPUT_TYPE.FILE_DESCRIPTOR) fs.close(input);
-			}
+			if (lineInfo.rest.length === 0) close();
 
 			readBufferList = lineInfo.rest;
-
 			const outputBuffer = lineInfo.line.length === 1 ? lineInfo.line[0] : Buffer.concat(lineInfo.line);
+
 			return iconv.decode(outputBuffer, encoding);
 		});
 	}
 
 	/**
-	 * Read data from input until line separator is found or end of input reached
+	 * Close nexline
 	 */
-	async function readInput() {
+	function close() {
+		isFinished = true;
+		if (autoCloseFile && inputType === INPUT_TYPE.FILE_DESCRIPTOR) fs.close(input);
+	}
+
+	/**
+	 * Read data from input until line separator is found or end of input reached
+	 * @private
+	 */
+	async function _readInput() {
 		while (true) {
 			// Try to get chunkBuffer
 			const readBuffer = await inputReader.read();
@@ -143,6 +149,7 @@ function nexline(param) {
 	 */
 	return {
 		next,
+		close,
 	};
 }
 
