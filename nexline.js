@@ -12,7 +12,7 @@ const taskQueueUtil = require('./util/taskQueueUtil');
 /**
  * Variables
  */
-const { INPUT_STATUS, INPUT_TYPE } = code;
+const { INPUT_TYPE } = code;
 
 /**
  * Create nexline
