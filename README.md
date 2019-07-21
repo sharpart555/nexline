@@ -131,6 +131,7 @@ const nl = nexline({
 | Name          |  Description    |
 | ------------- | --------------- |
 | next()        | **async**, It returns line until all data is read, after then returns `null`  |
+| close()        | Close nexline |
 
 ## Options
 | Name          | Default                     |  Description    |
