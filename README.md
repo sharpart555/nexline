@@ -45,8 +45,10 @@ const nexline = require('nexline');
 const fs = require('fs');
 
 async function main () {
+  const fd = fs.openSync(path_to_file, 'r');
+  
   const nl = nexline({
-    input: fs.openSync(path_to_file, 'r'), // input can be file, stream, string and buffer 
+    input: fd, // input can be file, stream, string and buffer 
   });
   
   while(true) {
@@ -54,6 +56,8 @@ async function main () {
     console.log(line);
     if (line === null) break; // If all data is read, returns null
   }
+  
+  fs.closeSync(fd);
 }
 
 ```
