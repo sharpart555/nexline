@@ -6,8 +6,8 @@
 [![CircleCI](https://circleci.com/gh/sharpart555/nexline.svg?style=svg)](https://circleci.com/gh/sharpart555/nexline)
 
 
-Reading file, string, buffer line by line.\
-Great for execute async job over line by line in large file.
+Read file, stream, string, buffer line by line.\
+Great for execute async job over line by line in large file without putting them all in memory.
 
 * Lightweight
 * Handle large file with small memory footprint
@@ -25,11 +25,12 @@ If I want to execute async function over line by line in large file, I have to c
 I needed better way to do that without putting them all in memory.
 
 ## Breaking changes in 1.0.0
+* Change line separator default value from `['\n', '\r\n']` to `'\n'` for better performance
+  * If you want to support both CRLF and LF, set `lineSeparator: ['\n', '\r\n']`
 * Support reverse mode.
 * Support file descriptor as input
-* Change line separator default value from `['\n', '\r\n']` to `'\n'` for performance
-  * Still support both CRLF and LF, just set `lineSeparator: ['\n', '\r\n']`
-* Optimize performance and memory usage
+* Improve performance
+* Optimize memory usage
 
 ## Install with npm
 Required Node.js version >= 8.0.0.
