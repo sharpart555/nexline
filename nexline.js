@@ -85,7 +85,9 @@ function nexline(param) {
 				// Check if bufferString contains line separator
 				if (lineInfo.rest.length) {
 					readBufferList = lineInfo.rest;
-					return iconv.decode(Buffer.concat(lineInfo.line), encoding);
+
+					const outputBuffer = lineInfo.line.length === 1 ? lineInfo.line[0] : Buffer.concat(lineInfo.line);
+					return iconv.decode(outputBuffer, encoding);
 				}
 			}
 
@@ -97,7 +99,9 @@ function nexline(param) {
 			if (lineInfo.rest.length === 0) isFinished = true;
 
 			readBufferList = lineInfo.rest;
-			return iconv.decode(Buffer.concat(lineInfo.line), encoding);
+
+			const outputBuffer = lineInfo.line.length === 1 ? lineInfo.line[0] : Buffer.concat(lineInfo.line);
+			return iconv.decode(outputBuffer, encoding);
 		});
 	}
 
