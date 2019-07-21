@@ -18,6 +18,7 @@ const { INPUT_TYPE } = code;
  * @param param.input
  * @param param.readTimeout for streamReader
  * @param param.readSize for fileReader
+ * @param param.reverse for fileReader
  */
 function create(param) {
 	const { input } = param;

@@ -63,7 +63,7 @@ function nexline(param) {
 	 * Variables
 	 */
 	const tq = taskQueueUtil.create();
-	const inputReader = reader.create({ input });
+	const inputReader = reader.create({ input, reverse });
 	let isFinished = false;
 	let readBufferList = [];
 
