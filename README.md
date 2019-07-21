@@ -115,7 +115,7 @@ const nl = nexline({
 ```js
 const nl = nexline({
   input: 'foo\r\nbar\nbaz', 
-  lineSeparator: ['\n', '\r\n'], // You can support both LF and CRLF like this.
+  lineSeparator: ['\n', '\r\n'], // You can handle both LF and CRLF like this.
 });
 ```
 
