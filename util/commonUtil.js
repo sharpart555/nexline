@@ -60,7 +60,7 @@ function findIndexFromBuffer(param) {
 			) {
 				result.index = indexInfo.index;
 				result.size = indexInfo.size;
-				result.partial = indexInfo.partial;
+				result.partial = !!indexInfo.partial;
 			}
 		} else {
 			// Find smallest index, if same, choose large size one.
@@ -72,7 +72,7 @@ function findIndexFromBuffer(param) {
 			) {
 				result.index = indexInfo.index;
 				result.size = indexInfo.size;
-				result.partial = indexInfo.partial;
+				result.partial = !!indexInfo.partial;
 			}
 		}
 	}
