@@ -50,14 +50,28 @@ function findIndexFromBuffer(param) {
 	for (const needle of needleList) {
 		const indexInfo = _findOne({ bufferList, needle, reverse, partial });
 
-		if (
-			result.index === -1 || //
-			(result.index > indexInfo.index && indexInfo.index !== -1) ||
-			(result.index === indexInfo.index && result.size < indexInfo.size)
-		) {
-			result.index = indexInfo.index;
-			result.size = indexInfo.size;
-			result.partial = indexInfo.size !== needle.length;
+		if (reverse) {
+			// Find largest index + size. If same, choose large size one.
+			if (
+				result.index === -1 || //
+				result.index + result.size < indexInfo.index + indexInfo.size ||
+				(result.index + result.size === indexInfo.index + indexInfo.size && result.size < indexInfo.size)
+			) {
+				result.index = indexInfo.index;
+				result.size = indexInfo.size;
+				result.partial = indexInfo.size !== needle.length;
+			}
+		} else {
+			// Find smallest index, if same, choose large size one.
+			if (
+				result.index === -1 || //
+				(result.index > indexInfo.index && indexInfo.index !== -1) ||
+				(result.index === indexInfo.index && result.size < indexInfo.size)
+			) {
+				result.index = indexInfo.index;
+				result.size = indexInfo.size;
+				result.partial = indexInfo.size !== needle.length;
+			}
 		}
 	}
 

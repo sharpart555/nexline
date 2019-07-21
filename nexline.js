@@ -94,7 +94,6 @@ function nexline(param) {
 
 			// Parse line
 			const lineInfo = commonUtil.parseLine({ bufferList: readBufferList, lineSeparatorList, reverse });
-
 			if (lineInfo.rest.length === 0) isFinished = true;
 
 			readBufferList = lineInfo.rest;
