@@ -17,13 +17,13 @@ const { INPUT_STATUS, INPUT_TYPE } = code;
  * Create nexline
  * @param param
  * @param param.input string, buffer, readable stream, file descriptor
- * @param [param.lineSeparator] if not specified, auto detect crlf and lf
+ * @param [param.lineSeparator]
  * @param [param.encoding] input stream encoding using iconv-lite
  * @param [param.reverse] starting from last line
  */
 function nexline(param) {
 	const param2 = {
-		lineSeparator: ['\n', '\r\n'],
+		lineSeparator: '\n',
 		encoding: 'utf8',
 		reverse: false,
 		...param,
@@ -57,7 +57,7 @@ function nexline(param) {
 	if (!iconv.encodingExists(encoding)) throw new Error('Invalid encoding. Check encodings supported by iconv-lite');
 
 	// Verify option
-	if (reverse && inputType === INPUT_TYPE.STREAM) throw new Error('Stream cannot be read reversely');
+	if (reverse && inputType === INPUT_TYPE.STREAM) throw new Error('Stream cannot be read reversely. use other input like file descriptor');
 
 	/**
 	 * Variables
