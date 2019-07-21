@@ -6,7 +6,7 @@ const nexline = require('../index');
 describe('Nexline test', async () => {
 	it('Text input test', async () => {
 		const nl = nexline({
-			input: '123\r\n456\n789',
+			input: '123\n456\n789',
 		});
 
 		assert.strictEqual('123', await nl.next());
@@ -17,7 +17,7 @@ describe('Nexline test', async () => {
 
 	it('Text input reverse test', async () => {
 		const nl = nexline({
-			input: '123\r\n456\n789',
+			input: '123\n456\n789',
 			reverse: true,
 		});
 
@@ -29,7 +29,7 @@ describe('Nexline test', async () => {
 
 	it('Buffer input test', async () => {
 		const nl = nexline({
-			input: Buffer.from('123\r\n456\n789'),
+			input: Buffer.from('123\n456\n789'),
 		});
 
 		assert.strictEqual('123', await nl.next());
@@ -40,7 +40,7 @@ describe('Nexline test', async () => {
 
 	it('Buffer input reverse test', async () => {
 		const nl = nexline({
-			input: Buffer.from('123\r\n456\n789'),
+			input: Buffer.from('123\n456\n789'),
 			reverse: true,
 		});
 
