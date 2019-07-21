@@ -5,6 +5,19 @@ const stream = require('stream');
 const { INPUT_TYPE } = require('../code/code');
 
 /**
+ * Convert to Array
+ * @param input
+ * @param keepUndefined
+ */
+function toArray(input, keepUndefined) {
+	if (keepUndefined && input === undefined) return;
+
+	if (Array.isArray(input)) return input;
+	else if (input === undefined) return [];
+	else return [input];
+}
+
+/**
  * Check and return inputType
  * @param input
  */
@@ -214,6 +227,7 @@ function parseLine(param) {
 }
 
 module.exports = {
+	toArray,
 	getInputType,
 	removeUndefined,
 	findIndexFromBuffer,

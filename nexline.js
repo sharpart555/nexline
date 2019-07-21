@@ -39,7 +39,7 @@ function nexline(param) {
 	if (inputType === undefined) throw new Error('Invalid input. Input must be one of these: string, buffer, readable stream, file descriptor');
 
 	// Verify lineSeparator
-	const lineSeparatorStringList = Array.isArray(param2.lineSeparator) ? [...param2.lineSeparator] : [param2.lineSeparator];
+	const lineSeparatorStringList = commonUtil.toArray(param2.lineSeparator);
 	if (lineSeparatorStringList.length === 0) throw new Error('Invalid lineSeparator');
 
 	//Convert lineSeparator to buffer

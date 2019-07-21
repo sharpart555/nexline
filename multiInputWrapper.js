@@ -13,7 +13,7 @@ const commonUtil = require('./util/commonUtil');
  */
 function multiInputWrapper(param) {
 	// Verify input
-	const inputList = Array.isArray(param.input) ? [...param.input] : [param.input];
+	const inputList = commonUtil.toArray(param.input);
 	if (inputList.length === 0) throw new Error('Invalid input');
 
 	// Create nexlines for each input
