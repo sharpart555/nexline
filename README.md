@@ -115,7 +115,7 @@ const nl = nexline({
 ```js
 const nl = nexline({
   input: 'foo\r\nbar\nbaz', 
-  lineSeparator: ['\n', '\r\n'], // You can support both LF and CRLF like this.
+  lineSeparator: ['\n', '\r\n'], // You can handle both LF and CRLF like this.
 });
 ```
 
@@ -138,7 +138,7 @@ const nl = nexline({
 | input         | undefined                   | **Required.** File descriptor, stream, string, buffer, You can provide multiple inputs using array |
 | lineSeparator | '\n'                         | Any string more than one character. You can provide multiple line separator using array |
 | encoding      | 'utf8'                      | [See encodings supported by iconv-lite](https://github.com/ashtuchkin/iconv-lite/wiki/Supported-Encodings) |
-| reverse       | false                       | Reverse mode, **Cannot use this option with stream input** because stream cannot be read from end |
+| reverse       | false                       | Reverse mode, **Cannot use this option with stream input** because stream cannot be read from end. Use file descriptor instead |
 | autoCloseFile | false                       | Automatically close file descriptor after all data is read |
 
 ## Contribution
