@@ -24,6 +24,13 @@ Even if `pause()` works immediately, it is still inconvenient.\
 If I want to execute async function over line by line in large file, I have to call `pause()` and `resume()` at every line.\
 I needed better way to do that without putting them all in memory.
 
+## Breaking changes in 1.0.0
+* Support reverse mode.
+* Support file descriptor as input
+* Change line separator default value from `['\n', '\r\n']` to `'\n'` for performance
+  * Still support both CRLF and LF, just set `lineSeparator: ['\n', '\r\n']`
+* Optimize performance and memory usage
+
 ## Install with npm
 Required Node.js version >= 8.0.0.
 ```
@@ -74,7 +81,7 @@ const nl = nexline({
 ```js
 const nl = nexline({
   input: [
-    fs.createReadStream(path_to_file1),
+    fs.openSync(path_to_file1, 'r'),
     fs.createReadStream(path_to_file2),
     'foo\nbar\nbaz',
     Buffer.from('foo\nbar\nbaz'),
@@ -123,10 +130,10 @@ const nl = nexline({
 ## Options
 | Name          | Default                     |  Description    |
 | ------------- | --------------------------- | --------------- |
-| input         | undefined                   | **Required.** Readable stream, string, buffer, You can use multiple inputs |
-| lineSeparator | '\n'                         | Any string more than one character. You can use multiple line separator |
+| input         | undefined                   | **Required.** File descriptor, stream, string, buffer, You can provide multiple inputs using array |
+| lineSeparator | '\n'                         | Any string more than one character. You can provide multiple line separator using array |
 | encoding      | 'utf8'                      | [See encodings supported by iconv-lite](https://github.com/ashtuchkin/iconv-lite/wiki/Supported-Encodings) |
-| reverse       | false                       | Reverse mode, **Cannot use this option with stream input** |
+| reverse       | false                       | Reverse mode, **Cannot use this option with stream input** because stream cannot be read from end |
 
 ## Contribution
 Pull requests and stars are always welcome. For bugs and feature requests, [please create an issue](https://github.com/sharpart555/nexline/issues/new)
