@@ -48,7 +48,7 @@ async function main () {
   const fd = fs.openSync(path_to_file, 'r');
   
   const nl = nexline({
-    input: fd, // input can be file, stream, string and buffer 
+    input: fd, // input can be file, stream, string and buffer
   });
   
   while(true) {
@@ -57,7 +57,7 @@ async function main () {
     if (line === null) break; // If all data is read, returns null
   }
   
-  fs.closeSync(fd);
+  fs.closeSync(fd); // You can use `autoCloseFile: true` to close file descriptor automatically
 }
 
 ```
@@ -139,6 +139,7 @@ const nl = nexline({
 | lineSeparator | '\n'                         | Any string more than one character. You can provide multiple line separator using array |
 | encoding      | 'utf8'                      | [See encodings supported by iconv-lite](https://github.com/ashtuchkin/iconv-lite/wiki/Supported-Encodings) |
 | reverse       | false                       | Reverse mode, **Cannot use this option with stream input** because stream cannot be read from end |
+| autoCloseFile | false                       | Automatically close file descriptor after all data is read |
 
 ## Contribution
 Pull requests and stars are always welcome. For bugs and feature requests, [please create an issue](https://github.com/sharpart555/nexline/issues/new)
