@@ -1,13 +1,16 @@
 /**
- * Variable
- */
-const READ_TIMEOUT = 15000;
-
-/**
  * Stream Reader
- * @param input
+ * @param param
+ * @param param.input
+ * @param param.readSize
+ * @param param.readTimeout
  */
-function create(input) {
+function create(param) {
+	const param2 = {
+		readTimeout: 15000,
+		...param,
+	};
+	const { input, readTimeout } = param2;
 	let isFinished = false;
 
 	/**
@@ -20,12 +23,14 @@ function create(input) {
 			input.once('error', _handleError);
 
 			// If it takes too long...
-			setTimeout(() => {
-				input.removeListener('readable', _handleReadable);
-				input.removeListener('end', _handleEnd);
-				input.removeListener('error', _handleError);
-				reject(new Error('Stream read timeout!'));
-			}, READ_TIMEOUT);
+			if (readTimeout < Infinity) {
+				setTimeout(() => {
+					input.removeListener('readable', _handleReadable);
+					input.removeListener('end', _handleEnd);
+					input.removeListener('error', _handleError);
+					reject(new Error('Stream read timeout!'));
+				}, readTimeout);
+			}
 
 			function _handleReadable() {
 				input.removeListener('end', _handleEnd);

@@ -1,8 +1,10 @@
 /**
  * Buffer Reader
- * @param input
+ * @param param
+ * @param param.input
  */
-function create(input) {
+function create(param) {
+	const { input } = param;
 	let isFinished = false;
 
 	/**
