@@ -62,6 +62,7 @@ describe('Nexline test', async () => {
 	it('File input test', async () => {
 		const nl = nexline({
 			input: await fs.open(path.resolve(__dirname, './data/large.txt'), 'r'),
+			autoCloseFile: true,
 		});
 
 		for (let i = 1; i <= 2000; i++) assert.strictEqual(true, (await nl.next()).startsWith(`Line ${i},`));
@@ -72,6 +73,7 @@ describe('Nexline test', async () => {
 		const nl = nexline({
 			input: await fs.open(path.resolve(__dirname, './data/large.txt'), 'r'),
 			reverse: true,
+			autoCloseFile: true,
 		});
 
 		for (let i = 2000; i >= 1; i--) assert.strictEqual(true, (await nl.next()).startsWith(`Line ${i},`));
