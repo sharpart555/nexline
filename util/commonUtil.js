@@ -55,22 +55,24 @@ function findIndexFromBuffer(param) {
 			if (
 				result.index === -1 || //
 				result.index + result.size < indexInfo.index + indexInfo.size ||
-				(result.index + result.size === indexInfo.index + indexInfo.size && result.size < indexInfo.size)
+				(result.index + result.size === indexInfo.index + indexInfo.size && result.size < indexInfo.size) ||
+				(result.index + result.size === indexInfo.index + indexInfo.size && result.size === indexInfo.size && result.partial === false && indexInfo.partial === true)
 			) {
 				result.index = indexInfo.index;
 				result.size = indexInfo.size;
-				result.partial = indexInfo.size !== needle.length;
+				result.partial = indexInfo.partial;
 			}
 		} else {
 			// Find smallest index, if same, choose large size one.
 			if (
 				result.index === -1 || //
 				(result.index > indexInfo.index && indexInfo.index !== -1) ||
-				(result.index === indexInfo.index && result.size < indexInfo.size)
+				(result.index === indexInfo.index && result.size < indexInfo.size) ||
+				(result.index === indexInfo.index && result.size === indexInfo.size && result.partial === false && indexInfo.partial === true)
 			) {
 				result.index = indexInfo.index;
 				result.size = indexInfo.size;
-				result.partial = indexInfo.size !== needle.length;
+				result.partial = indexInfo.partial;
 			}
 		}
 	}
@@ -111,7 +113,9 @@ function findIndexFromBuffer(param) {
 					if (size === 0) index = baseIndex + j;
 					size++;
 					if (size >= needle.length) {
-						return reverse ? { index: totalBufferLength - index - size, size } : { index, size };
+						const result = reverse ? { index: totalBufferLength - index - size, size } : { index, size };
+						if (partial && result.size !== needle.length) result.partial = true;
+						return result;
 					}
 				} else {
 					index = -1;
@@ -121,8 +125,13 @@ function findIndexFromBuffer(param) {
 			baseIndex += buffer.length;
 		}
 
-		if (!partial) return { index: -1, size: 0 };
-		else return reverse && index !== -1 ? { index: totalBufferLength - index - size, size } : { index, size };
+		if (!partial) {
+			return { index: -1, size: 0 };
+		}
+
+		const result = reverse && index !== -1 ? { index: totalBufferLength - index - size, size } : { index, size };
+		if (partial && result.size !== needle.length) result.partial = true;
+		return result;
 	}
 }
 
