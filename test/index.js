@@ -245,7 +245,7 @@ describe('Nexline test', async () => {
 		assert.throws(() => {
 			nexline({
 				input: fs.createReadStream(path.resolve(__dirname, './data/simple.txt')),
-				reverse: true
+				reverse: true,
 			});
 		});
 	});
