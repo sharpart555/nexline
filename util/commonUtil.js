@@ -161,18 +161,14 @@ function splitBufferList(param) {
 			const beforeBufferEnd = indexInfo.index - baseIndex;
 			const beforeBufferSize = beforeBufferEnd - beforeBufferStart;
 			if (beforeBufferSize > 0) {
-				const beforeBuffer = Buffer.allocUnsafe(beforeBufferSize);
-				buffer.copy(beforeBuffer, 0, beforeBufferStart, beforeBufferEnd);
-				result.before.push(beforeBuffer);
+				result.before.push(buffer.slice(beforeBufferStart, beforeBufferEnd));
 			}
 
 			const afterBufferStart = indexInfo.index + indexInfo.size - baseIndex;
 			const afterBufferEnd = buffer.length;
 			const afterBufferSize = afterBufferEnd - afterBufferStart;
 			if (afterBufferSize > 0) {
-				const afterBuffer = Buffer.allocUnsafe(afterBufferSize);
-				buffer.copy(afterBuffer, 0, afterBufferStart, afterBufferEnd);
-				result.after.push(afterBuffer);
+				result.after.push(buffer.slice(afterBufferStart, afterBufferEnd));
 			}
 		}
 
