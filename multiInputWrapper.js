@@ -11,6 +11,7 @@ const commonUtil = require('./util/commonUtil');
  * @param [param.lineSeparator]
  * @param [param.encoding] input stream encoding using iconv-lite
  * @param [param.reverse] starting from last line
+ * @param [param.autoCloseFile] close file descriptor automatically
  */
 function multiInputWrapper(param) {
 	// Verify input
