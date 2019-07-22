@@ -53,11 +53,16 @@ function multiInputWrapper(param) {
 		}
 	}
 
+	function close() {
+		for (const nl of nlList) nl.close();
+	}
+
 	/**
 	 * Expose method
 	 */
 	return {
 		next,
+		close,
 	};
 }
 

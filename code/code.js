@@ -1,9 +1,4 @@
 module.exports = {
-	INPUT_STATUS: {
-		BEFORE_READY: 0,
-		READY: 1,
-		END: 2,
-	},
 	INPUT_TYPE: {
 		INVALID: -1,
 		STREAM: 0,
