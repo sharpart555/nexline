@@ -219,6 +219,17 @@ describe('Nexline test', async () => {
 		assert.strictEqual(null, await nl.next());
 	});
 
+	it('Close test', async () => {
+		const nl = nexline({
+			input: await fs.open(path.resolve(__dirname, './data/large.txt'), 'r'),
+			autoCloseFile: true,
+		});
+
+		assert.strictEqual(true, (await nl.next()).startsWith('Line 1,'));
+		nl.close();
+		assert.strictEqual(null, await nl.next());
+	});
+
 	it('Invalid parameter test', async () => {
 		assert.throws(() => {
 			nexline();
