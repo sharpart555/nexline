@@ -3,7 +3,8 @@
 [![npm](https://img.shields.io/node/v/nexline.svg)](https://www.npmjs.com/package/nexline)
 [![npm](https://img.shields.io/npm/dt/nexline.svg)](https://www.npmjs.com/package/nexline)
 [![GitHub license](https://img.shields.io/github/license/sharpart555/nexline.svg)](https://github.com/sharpart555/nexline/blob/master/LICENSE)
-[![CircleCI](https://circleci.com/gh/sharpart555/nexline.svg?style=svg)](https://circleci.com/gh/sharpart555/nexline)
+[![CircleCI](https://img.shields.io/circleci/build/github/sharpart555/nexline.svg?token=7dfc6c63f220b0c5a546e7e1d1e820443a78ef2e)](https://circleci.com/gh/sharpart555/nexline)
+
 
 
 Read file, stream, string, buffer line by line.\
@@ -25,8 +26,8 @@ If I want to execute async function over line by line in large file, I have to c
 I needed better way to do that without putting them all in memory.
 
 ## Breaking changes in 1.0.0
-* Change line separator default value from `['\n', '\r\n']` to `'\n'` for better performance
-  * If you want to support both CRLF and LF, set `lineSeparator: ['\n', '\r\n']`
+* `lineSeparator` default value is changed from `['\n', '\r\n']` to `'\n'` for better performance
+  * If you want to handle both CRLF and LF, set `lineSeparator: ['\n', '\r\n']`
 * Support reverse mode.
 * Support file descriptor as input
 * Improve performance
@@ -98,7 +99,7 @@ const nl = nexline({
 [See encodings supported by iconv-lite](https://github.com/ashtuchkin/iconv-lite/wiki/Supported-Encodings)
 ```js
 const nl = nexline({
-  input: fs.createReadStream(path_to_file), 
+  input: fs.openSync(path_to_file, 'r'), 
   encoding: 'cp949',
 });
 ```
