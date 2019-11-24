@@ -4,23 +4,23 @@
  * @param param.input
  */
 function create(param) {
-	const { input } = param;
-	let isFinished = false;
+  const { input } = param;
+  let isFinished = false;
 
-	/**
-	 * Read stream
-	 */
-	async function read() {
-		if (isFinished) return null;
-		isFinished = true;
-		return Buffer.isBuffer(input) ? input : Buffer.from(input);
-	}
+  /**
+   * Read stream
+   */
+  async function read() {
+    if (isFinished) return null;
+    isFinished = true;
+    return Buffer.isBuffer(input) ? input : Buffer.from(input);
+  }
 
-	return {
-		read,
-	};
+  return {
+    read,
+  };
 }
 
 module.exports = {
-	create,
+  create,
 };
