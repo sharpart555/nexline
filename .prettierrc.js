@@ -1,11 +1,7 @@
-// prettier override configuration for y-part
-// https://wiki.linecorp.com/pages/viewpage.action?spaceKey=LINEFE&title=Convention+TF+-+04.Prettier+guide
-// https://prettier.io/docs/en/options.html
-
 module.exports = {
-  printWidth: 200,
-  tabWidth: 4,
-  useTabs: true,
+  printWidth: 120,
+  tabWidth: 2,
+  useTabs: false,
   semi: true,
   singleQuote: true,
   trailingComma: 'es5',
