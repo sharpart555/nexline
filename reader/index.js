@@ -16,7 +16,6 @@ const { INPUT_TYPE } = code;
  * Create inputReader
  * @param param
  * @param param.input
- * @param param.readTimeout for streamReader
  * @param param.readSize for fileReader
  * @param param.reverse for fileReader
  */

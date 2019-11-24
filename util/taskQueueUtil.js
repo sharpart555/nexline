@@ -25,7 +25,7 @@ function create() {
 	}
 
 	/**
-	 * taskQueue의 아이템을 하나 실행
+	 * Execute a task
 	 * @private
 	 */
 	async function _process() {
