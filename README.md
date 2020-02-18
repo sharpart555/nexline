@@ -34,7 +34,7 @@ I needed better way to do that without putting them all in memory.
 * Optimize memory usage
 
 ## Install with npm
-Required Node.js version >= 8.0.0.
+Required Node.js version >= **8.0.0**
 ```
 npm install nexline
 ```
@@ -55,7 +55,7 @@ async function main () {
 }
 ```
 
-### Use as iterator
+### Use as iterator ( Requires node >= 10 )
 ```js
 const nexline = require('nexline');
 
