@@ -5,4 +5,4 @@ test*
 .eslintignore
 .eslintrc.js
 .prettierrc.js
-.circleci
+.github
