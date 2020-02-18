@@ -80,8 +80,9 @@ describe('Nexline common test', async () => {
     });
 
     let count = 0;
-    for (const line of nl) {
+    for await (const line of nl) {
       assert.strictEqual(line, inputList[count++]);
     }
+    assert.strictEqual(await nl.next(), null, 'After iterator is end, returns null');
   });
 });
