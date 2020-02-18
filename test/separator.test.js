@@ -1,4 +1,4 @@
-const assert = require('assert');
+const assert = require('chai').assert;
 const nexline = require('../index');
 
 describe('Separator test', async () => {
