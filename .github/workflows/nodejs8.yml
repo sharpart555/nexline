@@ -20,6 +20,6 @@ jobs:
     - name: npm install and test
       run: |
         npm ci
-        npm test:node8
+        npm run test:node8
       env:
         CI: true
