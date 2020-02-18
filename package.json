@@ -26,7 +26,8 @@
     "buffer",
     "file",
     "read",
-    "reverse"
+    "reverse",
+    "iterable"
   ],
   "main": "index.js",
   "engines": {
