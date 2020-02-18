@@ -1,2 +1,2 @@
-const multiInputWrapper = require('./multiInputWrapper');
+const multiInputWrapper = require('./wrapper/multiInputWrapper');
 module.exports = multiInputWrapper;
