@@ -72,4 +72,16 @@ describe('Nexline common test', async () => {
       'Throws error when using reverse mode in with stream input'
     );
   });
+
+  it('Nexline is iterable', async () => {
+    const inputList = ['123', '456', '789'];
+    const nl = nexline({
+      input: inputList.join('\n'),
+    });
+
+    let count = 0;
+    for (const line of nl) {
+      assert.strictEqual(line, inputList[count++]);
+    }
+  });
 });
