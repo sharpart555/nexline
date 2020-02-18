@@ -29,10 +29,6 @@
     "reverse"
   ],
   "main": "index.js",
-  "scripts": {
-    "eslint": "eslint \"./**/*.js\"",
-    "test": "mocha ./test"
-  },
   "engines": {
     "node": ">= 8.0.0"
   },
@@ -44,8 +40,24 @@
     "eslint": "^6.1.0",
     "eslint-config-prettier": "^6.0.0",
     "eslint-plugin-prettier": "^3.1.0",
+    "husky": "^4.2.3",
+    "lint-staged": "^10.0.7",
     "mocha": "^6.2.0",
     "prettier": "^1.18.2",
     "prettier-eslint": "^9.0.0"
+  },
+  "husky": {
+    "hooks": {
+      "pre-commit": "lint-staged"
+    }
+  },
+  "lint-staged": {
+    "*.js": [
+      "eslint"
+    ]
+  },
+  "scripts": {
+    "eslint": "eslint \"./**/*.js\"",
+    "test": "mocha ./test"
   }
 }
