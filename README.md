@@ -43,53 +43,37 @@ npm install nexline
 ### Use `next()` method
 ```js
 const nexline = require('nexline');
-const fs = require('fs');
 
 async function main () {
-  const fd =  fs.openSync(path_to_file, 'r');
-  const nl = nexline({
-    input: fd, // input can be file, stream, string and buffer
-  });
+  const nl = nexline(...);
   
   while(true) {
     const line = await nl.next();
     console.log(line);
     if (line === null) break; // If all data is read, returns null
   }
-  
-  // Don't forget to close file descriptor after finish
-  // You can use `autoCloseFile: true` to close file descriptor automatically
-  fs.closeSync(fd);
 }
 ```
 
 ### Use as iterator
 ```js
 const nexline = require('nexline');
-const fs = require('fs');
 
 async function main () {
-  const fd =  fs.openSync(path_to_file, 'r');
-  const nl = nexline({
-    input: fd, // input can be file, stream, string and buffer
-   });
+  const nl = nexline(...);
 
   // nexline is iterable
-  for await (const line of nl) {
-    console.log(line);
-  }
-  
-  // Don't forget to close file descriptor after finish
-  // You can use `autoCloseFile: true` to close file descriptor automatically
-  fs.closeSync(fd);
+  for await (const line of nl) console.log(line);
 }
 ```
-## Option usage
+
 ### Use file as input
+* Don't forget to close file descriptor after finish
+* You can use `autoCloseFile: true` to close file descriptor automatically
 ```js
-// Don't forget to close file descriptor after finish
 const nl = nexline({
   input: fs.openSync(path_to_file, 'r'),
+  // autoCloseFile: true,
 });
 ```
 
