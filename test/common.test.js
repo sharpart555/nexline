@@ -1,7 +1,6 @@
 const assert = require('chai').assert;
 const fs = require('fs-extra');
 const path = require('path');
-const os = require('os');
 const nexline = require('../index');
 
 describe('Nexline common test', async () => {
@@ -17,35 +16,60 @@ describe('Nexline common test', async () => {
   });
 
   it('Check parameter', async () => {
-    assert.throws(() => {
-      nexline();
-    }, 'Throws error when parameter is empty');
+    assert.throws(
+      () => {
+        nexline();
+      },
+      undefined,
+      undefined,
+      'Throws error when parameter is empty'
+    );
 
-    assert.throws(() => {
-      nexline({
-        input: undefined,
-      });
-    }, 'Throws error when input is invalid');
+    assert.throws(
+      () => {
+        nexline({
+          input: undefined,
+        });
+      },
+      undefined,
+      undefined,
+      'Throws error when input is invalid'
+    );
 
-    assert.throws(() => {
-      nexline({
-        input: '123',
-        lineSeparator: true,
-      });
-    }, 'Throws error when line separator is invalid');
+    assert.throws(
+      () => {
+        nexline({
+          input: '123',
+          lineSeparator: true,
+        });
+      },
+      undefined,
+      undefined,
+      'Throws error when line separator is invalid'
+    );
 
-    assert.throws(() => {
-      nexline({
-        input: '123',
-        encoding: 'notSupportedEncoding',
-      });
-    }, 'Throws error when encoding is invalid');
+    assert.throws(
+      () => {
+        nexline({
+          input: '123',
+          encoding: 'notSupportedEncoding',
+        });
+      },
+      undefined,
+      undefined,
+      'Throws error when encoding is invalid'
+    );
 
-    assert.throws(() => {
-      nexline({
-        input: fs.createReadStream(path.resolve(__dirname, './data/simple.txt')),
-        reverse: true,
-      });
-    }, 'Throws error when using reverse mode in with stream input');
+    assert.throws(
+      () => {
+        nexline({
+          input: fs.createReadStream(path.resolve(__dirname, './data/simple.txt')),
+          reverse: true,
+        });
+      },
+      undefined,
+      undefined,
+      'Throws error when using reverse mode in with stream input'
+    );
   });
 });
