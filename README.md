@@ -3,7 +3,6 @@
 [![npm](https://img.shields.io/node/v/nexline.svg)](https://www.npmjs.com/package/nexline)
 [![npm](https://img.shields.io/npm/dt/nexline.svg)](https://www.npmjs.com/package/nexline)
 [![GitHub license](https://img.shields.io/github/license/sharpart555/nexline.svg)](https://github.com/sharpart555/nexline/blob/master/LICENSE)
-[![CircleCI](https://img.shields.io/circleci/build/github/sharpart555/nexline.svg?token=7dfc6c63f220b0c5a546e7e1d1e820443a78ef2e)](https://circleci.com/gh/sharpart555/nexline)
 
 
 
