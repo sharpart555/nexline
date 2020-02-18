@@ -11,6 +11,8 @@ function create(param) {
    * Prepare stream to read
    */
   async function prepareStream() {
+    if (input.destroyed) return false;
+
     return new Promise((resolve, reject) => {
       input.once('readable', _handleReadable);
       input.once('end', _handleEnd);
