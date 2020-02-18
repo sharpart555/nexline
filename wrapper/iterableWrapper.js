@@ -12,13 +12,15 @@ const multiInputWrapper = require('./multiInputWrapper');
 function iterableWrapper(param) {
   const instance = multiInputWrapper(param);
 
-  instance[Symbol.asyncIterator] = () => ({
-    async next() {
-      const line = await instance.next();
-      if (line === null) return { done: true };
-      else return { done: false, value: line };
-    },
-  });
+  if (Symbol.asyncIterator) {
+    instance[Symbol.asyncIterator] = () => ({
+      async next() {
+        const line = await instance.next();
+        if (line === null) return { done: true };
+        else return { done: false, value: line };
+      },
+    });
+  }
 
   return instance;
 }
