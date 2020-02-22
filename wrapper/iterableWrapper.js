@@ -18,13 +18,22 @@ function iterableWrapper(param) {
   };
 
   if (Symbol.asyncIterator) {
-    result[Symbol.asyncIterator] = async function*() {
-      while (true) {
+    result[Symbol.asyncIterator] = () => ({
+      async next() {
         const line = await instance.next();
-        if (line === null) break;
-        yield line;
-      }
-    };
+        if (line === null) return { done: true };
+        else return { done: false, value: line };
+      },
+    });
+
+    // Async generator is not supported in node 8
+    // result[Symbol.asyncIterator] = async function*() {
+    //   while (true) {
+    //     const line = await instance.next();
+    //     if (line === null) break;
+    //     yield line;
+    //   }
+    // };
   }
 
   return result;
