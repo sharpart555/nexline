@@ -15,7 +15,8 @@ Great for execute async job over line by line in large file without putting them
 * Support custom line separators
 * Support multiple line separators
 * Support multiple inputs
-* Support reverse mode 
+* Support reverse mode
+* Provide async iterator 
 
 ## Why I made this?
 Node.js's default readline module is great but it's `pause()` method does not work immediately.\
@@ -33,34 +34,49 @@ I needed better way to do that without putting them all in memory.
 * Optimize memory usage
 
 ## Install with npm
-Required Node.js version >= 8.0.0.
+Required Node.js version >= **8.0.0**
 ```
 npm install nexline
 ```
  
 ## How to use
-### Use file as input
+### Use `next()` method
 ```js
 const nexline = require('nexline');
-const fs = require('fs');
 
 async function main () {
-  const fd = fs.openSync(path_to_file, 'r');
-  
-  const nl = nexline({
-    input: fd, // input can be file, stream, string and buffer
-  });
+  const nl = nexline(...);
   
   while(true) {
     const line = await nl.next();
     console.log(line);
     if (line === null) break; // If all data is read, returns null
   }
-  
-  fs.closeSync(fd); // You can use `autoCloseFile: true` to close file descriptor automatically
 }
-
 ```
+
+### Use as iterator ( Requires node >= 10 )
+```js
+const nexline = require('nexline');
+
+async function main () {
+  const nl = nexline(...);
+
+  // nexline is iterable
+  for await (const line of nl) console.log(line);
+}
+```
+
+### Use file as input
+* Don't forget to close file descriptor after finish
+* You can use `autoCloseFile: true` to close file descriptor automatically
+```js
+const nl = nexline({
+  input: fs.openSync(path_to_file, 'r'),
+  // autoCloseFile: true,
+});
+```
+
 ### Use stream as input
 ```js
 const nl = nexline({

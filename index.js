@@ -1,2 +1,2 @@
-const multiInputWrapper = require('./multiInputWrapper');
-module.exports = multiInputWrapper;
+const iterableWrapper = require('./wrapper/iterableWrapper');
+module.exports = iterableWrapper;
