@@ -8,22 +8,26 @@ const multiInputWrapper = require('./multiInputWrapper');
  * @param [param.encoding] input stream encoding using iconv-lite
  * @param [param.reverse] starting from last line
  * @param [param.autoCloseFile] close file descriptor automatically
- * @returns {{next: next, close: close}}
  */
 function iterableWrapper(param) {
   const instance = multiInputWrapper(param);
 
+  const result = {
+    next: instance.next,
+    close: instance.close,
+  };
+
   if (Symbol.asyncIterator) {
-    instance[Symbol.asyncIterator] = () => ({
-      async next() {
+    result[Symbol.asyncIterator] = async function*() {
+      while (true) {
         const line = await instance.next();
-        if (line === null) return { done: true };
-        else return { done: false, value: line };
-      },
-    });
+        if (line === null) break;
+        yield line;
+      }
+    };
   }
 
-  return instance;
+  return result;
 }
 
 module.exports = iterableWrapper;
