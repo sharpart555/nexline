@@ -1,6 +1,6 @@
 {
   "name": "nexline",
-  "version": "1.1.2",
+  "version": "1.2.0",
   "description": "Read file, stream, string, buffer line by line. Great for execute async job over line by line in large file without putting them all in memory.",
   "author": "Youngho Jin",
   "license": "MIT",
@@ -26,7 +26,8 @@
     "buffer",
     "file",
     "read",
-    "reverse"
+    "reverse",
+    "iterable"
   ],
   "main": "index.js",
   "engines": {
@@ -59,6 +60,7 @@
   },
   "scripts": {
     "eslint": "eslint \"./**/*.js\"",
-    "test": "mocha ./test"
+    "test": "mocha ./test",
+    "test:node8": "mocha ./test --exclude test/iterable.test.js"
   }
 }

@@ -1,8 +1,8 @@
 /**
  * Import
  */
-const nexline = require('./nexline');
-const commonUtil = require('./util/commonUtil');
+const nexline = require('../nexline');
+const commonUtil = require('../util/commonUtil');
 
 /**
  * Nexline wrapper for supporting multiple inputs

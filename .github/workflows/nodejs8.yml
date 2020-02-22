@@ -1,4 +1,4 @@
-name: Node CI
+name: Node CI for version 8
 
 on: [push]
 
@@ -9,7 +9,7 @@ jobs:
 
     strategy:
       matrix:
-        node-version: [10.x, 12.x]
+        node-version: [8.x]
 
     steps:
     - uses: actions/checkout@v1
@@ -20,6 +20,6 @@ jobs:
     - name: npm install and test
       run: |
         npm ci
-        npm test
+        npm run test:node8
       env:
         CI: true
