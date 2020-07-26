@@ -10,13 +10,13 @@ Read file, stream, string, buffer line by line.\
 Great for execute async job over line by line in large file without putting them all in memory.
 
 * Lightweight
+* Iterable
 * Handle large file with small memory footprint
+* Support various input types (file, stream, string, buffer)
 * Support various encodings
-* Support custom line separators
-* Support multiple line separators
-* Support multiple inputs
 * Support reverse mode
-* Provide async iterator 
+* Support custom, multiple line separators
+* Support multiple inputs
 
 ## Why I made this?
 Node.js's default readline module is great but it's `pause()` method does not work immediately.\
