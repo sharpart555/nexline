@@ -1,6 +1,6 @@
 {
   "name": "nexline",
-  "version": "1.2.1",
+  "version": "1.2.2",
   "description": "Read file, stream, string, buffer line by line without putting them all in memory. It supports cool features like `custom line separator`, `various encodings`, `reverse mode`, `iterable protocol`",
   "author": "Youngho Jin",
   "license": "MIT",
