@@ -6,11 +6,11 @@
 
 
 
-Read file, stream, string, buffer line by line.\
-Great for execute async job over line by line in large file without putting them all in memory.
+Read file, stream, string, buffer line by line without putting them all in memory.\
+It supports cool features below.
 
 * Lightweight
-* Iterable
+* Iterable protocol
 * Handle large file with small memory footprint
 * Support various input types (file, stream, string, buffer)
 * Support various encodings
